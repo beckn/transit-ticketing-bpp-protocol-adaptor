@@ -1,2 +1,2 @@
-# swtd-bpp-protocol-adaptor
-Repository for SWTD BPP protocol adaptor
+# transit-ticketing-bpp-protocol-adaptor
+Repository for BPP protocol adaptor
