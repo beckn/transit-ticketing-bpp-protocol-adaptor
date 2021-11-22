@@ -24,7 +24,7 @@ class BppClientFactory @Autowired constructor(
   private val initialIntervalInMillis: Long,
   @Value("\${bpp_service.retry.interval_multiplier}")
   private val intervalMultiplier: Double,
-  @Value("\${beckn.security.enabled}") val enableSecurity: Boolean,
+  @Value("\${transit.security.enabled}") val enableSecurity: Boolean,
   private val interceptor: SignRequestInterceptor,
   @Value("\${bpp_service.timeouts.connection_in_seconds}") private val connectionTimeoutInSeconds: Long,
   @Value("\${bpp_service.timeouts.read_in_seconds}") private val readTimeoutInSeconds: Long,

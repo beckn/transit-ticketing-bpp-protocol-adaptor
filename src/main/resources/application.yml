@@ -1,6 +1,6 @@
 ---
 server:
-  port: 9001
+  port: 9003
 logging:
   level:
     org:

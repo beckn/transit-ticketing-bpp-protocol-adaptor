@@ -11,12 +11,12 @@ plugins {
   kotlin("kapt") version "1.4.31"
 }
 
-group = "org.beckn.one.sandbox"
+group = "transit.ticketing.bpp.protocol"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 allOpen {
-  annotation("org.beckn.one.sandbox.bap.Open")
+  annotation("transit.ticketing.bpp.protocol.Open")
 }
 
 repositories {
@@ -55,6 +55,7 @@ dependencies {
   implementation("com.squareup.retrofit2:retrofit-mock:$retrofitVersion")
   implementation("io.github.resilience4j:resilience4j-retrofit:1.7.1")
   implementation("io.github.resilience4j:resilience4j-retry:1.7.1")
+  implementation("org.beckn.jvm:beckn-protocol-dtos:0.9.1.18")
 
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("io.kotest:kotest-runner-junit5:4.4.3")
