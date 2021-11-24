@@ -1,0 +1,285 @@
+{
+  "openapi": "3.0.0",
+  "servers": [
+    {
+      "url": "http://box.beckn.org/client/v1"
+    }
+  ],
+  "info": {
+    "description": "This is the Beckn in a box storefront API which will be used to invoke Beckn Application Provider (BAP) API. The API also exposes additional endpoints to manage cart.",
+    "version": "1.0.0",
+    "title": "Beckn in a box Storefront API",
+    "contact": {
+      "email": "email@beckn.org"
+    }
+  },
+  "tags": [
+  ],
+  "paths": {
+    "/cart": {
+      "post": {
+        "summary": "Add a new cart",
+        "description": "Add a new cart",
+        "operationId": "addCart",
+        "responses": {
+          "404": {
+            "description": "Bad Request"
+          },
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Cart"
+        },
+        "parameters": [],
+        "externalDocs": {}
+      }
+    },
+    "/cart/{cartId}": {
+      "put": {
+        "summary": "Update an existing cart",
+        "description": "",
+        "operationId": "updateCart",
+        "responses": {
+          "404": {
+            "description": "Bad Request"
+          },
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Cart"
+        },
+        "parameters": [],
+        "externalDocs": {}
+      },
+      "get": {
+        "summary": "Get existing cart",
+        "operationId": "getCart",
+        "responses": {
+          "404": {
+            "description": "Bad Request"
+          },
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cart"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [],
+        "externalDocs": {}
+      },
+      "delete": {
+        "summary": "Delete existing cart",
+        "operationId": "deleteCart",
+        "responses": {
+          "404": {
+            "description": "Bad Request"
+          },
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Cart"
+        },
+        "parameters": [],
+        "externalDocs": {}
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Cart": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CartItem"
+            }
+          }
+        }
+      },
+      "CartItem": {
+        "type": "object",
+        "properties": {
+          "bppId": {
+            "type": "string"
+          },
+          "provider": {
+            "$ref": "#/components/schemas/Provider"
+          },
+          "itemId": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer"
+          },
+          "measure": {
+            "$ref": "#/components/schemas/ScalarQuantity"
+          }
+        }
+      },
+      "Provider": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "providerLocations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ScalarQuantity": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/Context"
+          },
+          "message": {
+            "$ref": "#/components/schemas/Message"
+          },
+          "error": {
+            "$ref": "#/components/schemas/Error"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "CONTEXT-ERROR",
+              "CORE-ERROR",
+              "DOMAIN-ERROR",
+              "POLICY-ERROR",
+              "JSON-SCHEMA-ERROR"
+            ]
+          },
+          "code": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Context": {
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "core_version": {
+            "type": "string"
+          },
+          "domain_version": {
+            "type": "string"
+          },
+          "transaction_id": {
+            "type": "string"
+          },
+          "message_id": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "ttl": {
+            "type": "string"
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "ack": {
+            "$ref": "#/components/schemas/Ack"
+          }
+        }
+      },
+      "Ack": {
+        "type": "string",
+        "enum": [
+          "ACK",
+          "NACK"
+        ]
+      }
+    },
+    "requestBodies": {
+      "Cart": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Cart"
+            }
+          }
+        },
+        "description": "Cart object that needs to be created",
+        "required": true
+      }
+    },
+    "securitySchemes": {
+    },
+    "links": {},
+    "callbacks": {}
+  },
+  "security": []
+}

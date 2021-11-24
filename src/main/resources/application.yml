@@ -1,0 +1,54 @@
+---
+server:
+  port: 9003
+logging:
+  level:
+    org:
+      apache:
+        coyote:
+          http11: DEBUG
+spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: non_null
+context:
+  domain: nic2004:52110
+  city: std:080
+  country: IND
+  bap_id: box.beckn.org
+  bap_uri: http://qa.api.box.beckn.org/bap/v1
+  ttl_seconds: 20
+transit:
+  security.enabled: false
+security:
+  self:
+    private_key:
+    unique_key_id: key1
+registry_service:
+  url: https://demo4460370.mockable.io/registry/
+  retry:
+    max_attempts: 3
+    initial_interval_in_millis: 1000
+    interval_multiplier: 1.0
+  cache:
+    expiry_cron_schedule: "0 */5 * * * *"
+  timeouts:
+    connection_in_seconds: 10
+    read_in_seconds: 10
+    write_in_seconds: 10
+bpp_registry_service:
+  url: https://demo4460370.mockable.io/bpp_registry/
+bpp_service:
+  retry:
+    max_attempts: 3
+    initial_interval_in_millis: 1000
+    interval_multiplier: 1.0
+  timeouts:
+    connection_in_seconds: 10
+    read_in_seconds: 10
+    write_in_seconds: 10
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "configprops, env, health, loggers, metrics, mappings, httptrace"
