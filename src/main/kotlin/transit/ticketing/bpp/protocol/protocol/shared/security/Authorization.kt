@@ -35,30 +35,34 @@ data class Authorization(
     const val ACCEPT = "Accept"
 
     fun parse(auth: String?): Authorization? {
-      return auth?.let { authStr ->
-        val authParams = authStr.trim()
-          .removePrefix("Signature ")
-          .split(",")
-          .associate {
-            val keyValue = it.trim().split("=\"", limit = 2)
-            Pair(keyValue[0], keyValue[1].removeSuffix("\""))
-          }
+      try{
+        return auth?.let { authStr ->
+          val authParams = authStr.trim()
+            .removePrefix("Signature ")
+            .split(",")
+            .associate {
+              val keyValue = it.trim().split("=\"", limit = 2)
+              Pair(keyValue[0], keyValue[1].removeSuffix("\""))
+            }
 
-        val keyId = authParams[KEY_ID] ?: return null
-        val algorithm = authParams[ALGORITHM] ?: return null
-        val created = authParams[CREATED]?.toLong() ?: return null
-        val expires = authParams[EXPIRES]?.toLong() ?: return null
-        val headers = authParams[HEADERS] ?: return null
-        val signature = authParams[SIGNATURE] ?: return null
+          val keyId = authParams[KEY_ID] ?: return null
+          val algorithm = authParams[ALGORITHM] ?: return null
+          val created = authParams[CREATED]?.toLong() ?: return null
+          val expires = authParams[EXPIRES]?.toLong() ?: return null
+          val headers = authParams[HEADERS] ?: return null
+          val signature = authParams[SIGNATURE] ?: return null
 
-        Authorization(
-          keyId = keyId,
-          algorithm = algorithm,
-          created = created,
-          expires = expires,
-          headers = headers,
-          signature = signature
-        )
+          Authorization(
+            keyId = keyId,
+            algorithm = algorithm,
+            created = created,
+            expires = expires,
+            headers = headers,
+            signature = signature
+          )
+        }
+      }catch (e: Exception){
+        return  null
       }
     }
 

@@ -32,6 +32,7 @@ repositories {
 
 dependencies {
   val retrofitVersion = "2.9.+"
+  val resilience4jVersion = "1.7.+"
 
   kapt("io.arrow-kt:arrow-meta:0.13.2")
   kapt("org.mapstruct:mapstruct-processor:1.4.2.Final")
@@ -46,22 +47,20 @@ dependencies {
   implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.+")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.+")
   implementation("io.arrow-kt:arrow-optics:0.13.2")
-  implementation("org.litote.kmongo:kmongo:4.2.8")
   implementation("org.mapstruct:mapstruct:1.4.2.Final")
   implementation("org.bouncycastle:bcprov-jdk15on:1.69")
   implementation("commons-codec:commons-codec:1.15")
   implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
   implementation("com.squareup.retrofit2:converter-jackson:$retrofitVersion")
   implementation("com.squareup.retrofit2:retrofit-mock:$retrofitVersion")
-  implementation("io.github.resilience4j:resilience4j-retrofit:1.7.1")
-  implementation("io.github.resilience4j:resilience4j-retry:1.7.1")
-  implementation("org.beckn.jvm:beckn-protocol-dtos:0.9.1.18")
+  implementation("io.github.resilience4j:resilience4j-retrofit:$resilience4jVersion")
+  implementation("io.github.resilience4j:resilience4j-retry:$resilience4jVersion")
+  implementation("io.github.resilience4j:resilience4j-circuitbreaker:$resilience4jVersion")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.+")
 
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("io.kotest:kotest-runner-junit5:4.4.3")
   testImplementation("io.kotest:kotest-extensions-spring:4.4.3")
-  testImplementation("com.github.tomakehurst:wiremock-jre8:2.28.0")
-  testImplementation("org.testcontainers:mongodb:1.15.3")
   testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
   testImplementation("io.kotest.extensions:kotest-assertions-arrow:1.0.2")
 }

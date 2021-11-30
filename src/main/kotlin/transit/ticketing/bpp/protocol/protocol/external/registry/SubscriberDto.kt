@@ -14,6 +14,8 @@ data class SubscriberDto(
   val signing_public_key: String,
   val encr_public_key: String,
   val status: Status,
+  val br_id: Int,
+  val ukId: String?,
 
   @JsonIgnore
   val clock: Clock = Clock.systemUTC(),

@@ -1,8 +1,8 @@
 package transit.ticketing.bpp.protocol.protocol.shared.controllers
 
-import org.beckn.protocol.schemas.ProtocolResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.ProtocolResponse
 import transit.ticketing.bpp.protocol.protocol.shared.services.PollForResponseService
 import transit.ticketing.bpp.protocol.schemas.factories.ContextFactory
 

@@ -1,0 +1,132 @@
+---
+server:
+  port: {{ service_port }}
+logging:
+  level:
+    org:
+      apache:
+        coyote:
+          http11: DEBUG
+spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: non_null
+registry_service:
+  url: https://demo4460370.mockable.io/registry/
+  retry:
+    max_attempts: 3
+    initial_interval_in_millis: 1000
+    interval_multiplier: 1.0
+  cache:
+    expiry_cron_schedule: "0 */5 * * * *"
+  timeouts:
+    connection_in_seconds: 10
+    read_in_seconds: 10
+    write_in_seconds: 10
+gateway_service:
+  retry:
+    max_attempts: 3
+    initial_interval_in_millis: 1000
+    interval_multiplier: 1.0
+  timeouts:
+    connection_in_seconds: 10
+    read_in_seconds: 10
+    write_in_seconds: 10
+bpp_registry_service:
+  url: {{ registry_url }}
+bpp_service:
+  retry:
+    max_attempts: 3
+    initial_interval_in_millis: 1000
+    interval_multiplier: 1.0
+  timeouts:
+    connection_in_seconds: 10
+    read_in_seconds: 10
+    write_in_seconds: 10
+protocol_service:
+  url: {{ protocol_url }}
+  retry:
+    max_attempts: 3
+    initial_interval_in_millis: 1000
+    interval_multiplier: 1.0
+  timeouts:
+    connection_in_seconds: 5
+    read_in_seconds: 5
+    write_in_seconds: 5
+context:
+  domain: nic2004:52110
+  city: std:080
+  country: IND
+  bap_id: box.beckn.org
+  bap_uri: https://qa.api.box.beckn.org/bap/protocol/v1
+  ttl_seconds: 3600
+beckn:
+  security.enabled: true
+security:
+  self:
+    private_key: {{ private_key }}
+    unique_key_id: 46
+    public_key: {{ public_key }}
+  firebase-props:
+    enable-strict-server-session: false
+    enable-check-session-revoked: false
+    enable-logout-everywhere: false
+    session-expiry-in-days: 5
+  allow-credentials: true
+  allowed-origins:
+    - http://localhost:9001
+  allowed-methods:
+    - GET
+    - POST
+    - PUT
+    - PATCH
+    - DELETE
+    - OPTIONS
+  allowed-headers:
+    - Authorization
+    - Origin
+    - Content-Type
+    - Accept
+    - Accept-Encoding
+    - Accept-Language
+    - Access-Control-Allow-Origin
+    - Access-Control-Allow-Headers
+    - Access-Control-Request-Method
+    - X-Requested-With
+    - X-Auth-Token
+    - X-Xsrf-Token
+    - Cache-Control
+    - Id-Token
+  allowed-public-apis:
+    - /favicon.ico
+    - /session/login
+    - /public/**
+  exposed-headers:
+    - X-Xsrf-Token
+  protected-actions:
+    - /client/v2/initialize_order
+    - /client/v2/on_initialize_order
+    - /client/v2/confirm_order
+    - /client/v2/on_confirm_order
+    - /client/v2/get_quote
+    - /client/v2/on_get_quote
+    - /client/v1/orders
+    - /client/v2/on_track
+    - /client/v2/track
+    - /client/v2/on_order_status
+    - /client/v2/order_status
+    - /client/v1/delivery_address
+    - /client/v2/confirm_order
+    - /client/v1/billing_details
+    - /client/v1/account_details
+    - /client/v2/on_support
+    - /client/v2/get_support
+database:
+  mongo:
+    url: mongodb://{{ mongo_host }}:{{ mongo_port }}
+    name: {{ bap_mongo_name }}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "configprops, env, health, loggers, metrics, mappings, httptrace"

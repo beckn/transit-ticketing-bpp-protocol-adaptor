@@ -29,9 +29,10 @@ class SecurityConfiguration(
       val authInterceptor = SignatureVerificationInterceptor(
         keyStores, listOf("Authorization"),objectMapper
       )
-      registry.addInterceptor(proxyAuthInterceptor).addPathPatterns("/protocol/v1/on_search")
+      registry.addInterceptor(proxyAuthInterceptor)
+        .addPathPatterns("/protocol/v1/search")
       registry.addInterceptor(authInterceptor)
-        .excludePathPatterns("/protocol/v1/on_search")
+        .excludePathPatterns("/protocol/v1/search")
         .excludePathPatterns("/protocol/response/*")
     }
   }

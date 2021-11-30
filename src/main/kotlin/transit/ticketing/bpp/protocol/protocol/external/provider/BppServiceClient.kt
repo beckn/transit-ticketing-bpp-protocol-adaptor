@@ -1,20 +1,25 @@
 package transit.ticketing.bpp.protocol.protocol.external.provider
 
-import org.beckn.protocol.schemas.*
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.*
 
 interface BppClient {
-  @POST("search")
-  fun search(@Body request: ProtocolSearchRequest): Call<ProtocolAckResponse>
+  @GET("stations")
+  fun search(@Body request: ProtocolSearchRequest): Call<ProtocolOnSearch>
 
   @POST("init")
-  fun init(@Body request: ProtocolInitRequest): Call<ProtocolAckResponse>
+  fun init(@Body request: ProtocolInitRequest): Call<ProtocolOnInit>
 
   @POST("confirm")
-  fun confirm(@Body request: ProtocolConfirmRequest): Call<ProtocolAckResponse>
+  fun confirm(@Body request: ProtocolConfirmRequest): Call<ProtocolOnConfirm>
 
-  @POST("cancel")
-  fun cancel(@Body request: ProtocolCancelRequest): Call<ProtocolAckResponse>
+  @POST("status")
+  fun status(@Body request: ProtocolOrderStatusRequest): Call<ProtocolOnOrderStatus>
+
+  @POST("on_search")
+  fun onSearch(@Body request: ProtocolOnSearch): Call<ProtocolAckResponse>
+
 }

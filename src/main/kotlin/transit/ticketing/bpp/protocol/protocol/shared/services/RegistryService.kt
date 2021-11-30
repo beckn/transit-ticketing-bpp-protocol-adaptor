@@ -8,9 +8,11 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import retrofit2.Response
-import transit.ticketing.bpp.protocol.configurations.RegistryClientConfiguration.Companion.BPP_REGISTRY_SERVICE_CLIENT
+import transit.ticketing.bpp.protocol.configurations.RegistryClientConfiguration.Companion.BPP_REGISTRY_SERVICE_PROTOCOL
+import transit.ticketing.bpp.protocol.configurations.RegistryClientConfiguration.Companion.MOCK_SUBSCRIBER_SERVICE_PROTOCOL
 import transit.ticketing.bpp.protocol.errors.registry.RegistryLookupError
 import transit.ticketing.bpp.protocol.protocol.external.domains.Subscriber
 import transit.ticketing.bpp.protocol.protocol.external.isInternalServerError
@@ -22,15 +24,23 @@ import transit.ticketing.bpp.protocol.protocol.external.registry.SubscriberLooku
 @Service
 class RegistryService(
   @Autowired private val registryServiceClient: RegistryClient,
-  @Qualifier(BPP_REGISTRY_SERVICE_CLIENT) @Autowired private val bppRegistryServiceClient: RegistryClient,
+  @Qualifier(MOCK_SUBSCRIBER_SERVICE_PROTOCOL) @Autowired private val mockBapClient: RegistryClient,
+  @Qualifier(BPP_REGISTRY_SERVICE_PROTOCOL) @Autowired private val bppRegistryServiceClient: RegistryClient,
   @Value("\${context.domain}") private val domain: String,
   @Value("\${context.city}") private val city: String,
   @Value("\${context.country}") private val country: String
 ) {
   private val log: Logger = LoggerFactory.getLogger(RegistryService::class.java)
 
+  @Cacheable(CacheName.bppById)
   fun lookupBppById(id: String): Either<RegistryLookupError, List<SubscriberDto>> {
-    return lookup(bppRegistryServiceClient, lookupRequest(subscriberType = Subscriber.Type.BPP, subscriberId = id))
+    return lookup(bppRegistryServiceClient, lookupRequest(subscriberType = Subscriber.Type.BAP, subscriberId = id))
+  }
+
+
+  @Cacheable(CacheName.gateways)
+  fun lookupGateways(): Either<RegistryLookupError, List<SubscriberDto>> {
+    return lookup(registryServiceClient, lookupRequest(subscriberType = Subscriber.Type.BG))
   }
 
   private fun lookup(
@@ -44,7 +54,9 @@ class RegistryService(
       return when {
         httpResponse.isInternalServerError() -> Left(RegistryLookupError.Internal)
         noSubscribersFound(httpResponse) -> Left(RegistryLookupError.NoSubscriberFound)
-        else -> Right(httpResponse.body()!!)
+        else -> Right(
+          httpResponse.body()!!
+        )
       }
     }.mapLeft {
       log.error("Error when looking up subscribers", it)
@@ -62,4 +74,9 @@ class RegistryService(
 
   private fun noSubscribersFound(httpResponse: Response<List<SubscriberDto>>) =
     httpResponse.body() == null || httpResponse.body()?.isEmpty() == true
+
+  object CacheName {
+    const val gateways = "gateways"
+    const val bppById = "bppById"
+  }
 }
