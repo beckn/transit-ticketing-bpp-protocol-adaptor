@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import transit.ticketing.bpp.protocol.protocol.discovery.services.SearchService
 import transit.ticketing.bpp.protocol.protocol.shared.dtos.SearchRequestDto
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.ProtocolAckResponse
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.ProtocolContext
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.ResponseMessage
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolAckResponse
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolContext
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ResponseMessage
 import transit.ticketing.bpp.protocol.schemas.factories.ContextFactory
 
 @RestController

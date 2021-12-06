@@ -3,8 +3,8 @@ package transit.ticketing.bpp.protocol.protocol.external
 import arrow.core.Either
 import org.springframework.http.HttpStatus
 import retrofit2.Response
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.ProtocolAckResponse
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.ResponseStatus
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolAckResponse
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ResponseStatus
 import java.util.function.Predicate
 
 

@@ -3,8 +3,8 @@ package transit.ticketing.bpp.protocol.errors.bpp
 
 import org.springframework.http.HttpStatus
 import transit.ticketing.bpp.protocol.errors.HttpError
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.ProtocolError
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.ResponseMessage
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolError
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ResponseMessage
 
 sealed class BppError : HttpError {
   val bppError = ProtocolError("BPP_011", "BPP returned error")

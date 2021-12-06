@@ -21,12 +21,6 @@ allOpen {
 
 repositories {
   mavenCentral()
-  maven {
-    url = uri("s3://beckn-maven-artifacts/releases")
-    authentication {
-      val awsIm by registering(AwsImAuthentication::class)
-    }
-  }
   mavenLocal()
 }
 
@@ -57,6 +51,9 @@ dependencies {
   implementation("io.github.resilience4j:resilience4j-retry:$resilience4jVersion")
   implementation("io.github.resilience4j:resilience4j-circuitbreaker:$resilience4jVersion")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.+")
+
+  implementation("org.litote.kmongo:kmongo:4.2.8")
+
 
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("io.kotest:kotest-runner-junit5:4.4.3")

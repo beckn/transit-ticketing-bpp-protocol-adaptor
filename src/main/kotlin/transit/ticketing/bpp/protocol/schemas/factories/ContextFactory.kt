@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import transit.ticketing.bpp.protocol.protocol.ProtocolVersion
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.ProtocolContext
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolContext
 import java.time.Clock
 
 @Component
@@ -18,10 +18,10 @@ class ContextFactory @Autowired constructor(
   private val clock: Clock = Clock.systemUTC()
 ) {
   fun create(
-    transactionId: String = uuidFactory.create(),
-    messageId: String = uuidFactory.create(),
-    action: ProtocolContext.Action? = ProtocolContext.Action.SEARCH,
-    bapId: String? = null,
+      transactionId: String = uuidFactory.create(),
+      messageId: String = uuidFactory.create(),
+      action: ProtocolContext.Action? = ProtocolContext.Action.SEARCH,
+      bapId: String? = null,
     ) = ProtocolContext(
     domain = domain,
     country = country,

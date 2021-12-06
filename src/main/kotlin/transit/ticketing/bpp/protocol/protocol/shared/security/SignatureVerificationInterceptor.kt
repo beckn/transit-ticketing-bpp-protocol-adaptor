@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.util.StreamUtils
 import org.springframework.web.servlet.HandlerInterceptor
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.ProtocolAckResponse
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.ResponseMessage
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolAckResponse
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ResponseMessage
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 

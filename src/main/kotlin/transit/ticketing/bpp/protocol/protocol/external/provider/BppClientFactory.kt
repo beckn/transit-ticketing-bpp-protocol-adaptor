@@ -33,7 +33,7 @@ class BppClientFactory @Autowired constructor(
 
   ) {
   @Cacheable("bppClients")
-  fun getClient(bppUri: String): BppClient {
+  fun getClient(bppUri: String): BppServiceClient {
     val url : String = Util.getBaseUri(bppUri)
     val retrofit = Retrofit.Builder()
       .baseUrl(url)
@@ -41,7 +41,7 @@ class BppClientFactory @Autowired constructor(
       .addConverterFactory(JacksonConverterFactory.create(objectMapper))
       .addCallAdapterFactory(RetryCallAdapter.of(getRetryConfig(bppUri)))
       .build()
-    return retrofit.create(BppClient::class.java)
+    return retrofit.create(BppServiceClient::class.java)
   }
 
   private fun buildHttpClient(): OkHttpClient {

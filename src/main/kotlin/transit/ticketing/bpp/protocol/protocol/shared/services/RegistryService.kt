@@ -12,7 +12,6 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import retrofit2.Response
 import transit.ticketing.bpp.protocol.configurations.RegistryClientConfiguration.Companion.BPP_REGISTRY_SERVICE_PROTOCOL
-import transit.ticketing.bpp.protocol.configurations.RegistryClientConfiguration.Companion.MOCK_SUBSCRIBER_SERVICE_PROTOCOL
 import transit.ticketing.bpp.protocol.errors.registry.RegistryLookupError
 import transit.ticketing.bpp.protocol.protocol.external.domains.Subscriber
 import transit.ticketing.bpp.protocol.protocol.external.isInternalServerError
@@ -24,7 +23,6 @@ import transit.ticketing.bpp.protocol.protocol.external.registry.SubscriberLooku
 @Service
 class RegistryService(
   @Autowired private val registryServiceClient: RegistryClient,
-  @Qualifier(MOCK_SUBSCRIBER_SERVICE_PROTOCOL) @Autowired private val mockBapClient: RegistryClient,
   @Qualifier(BPP_REGISTRY_SERVICE_PROTOCOL) @Autowired private val bppRegistryServiceClient: RegistryClient,
   @Value("\${context.domain}") private val domain: String,
   @Value("\${context.city}") private val city: String,
@@ -32,8 +30,8 @@ class RegistryService(
 ) {
   private val log: Logger = LoggerFactory.getLogger(RegistryService::class.java)
 
-  @Cacheable(CacheName.bppById)
-  fun lookupBppById(id: String): Either<RegistryLookupError, List<SubscriberDto>> {
+  @Cacheable(CacheName.bapById)
+  fun lookupBapById(id: String): Either<RegistryLookupError, List<SubscriberDto>> {
     return lookup(bppRegistryServiceClient, lookupRequest(subscriberType = Subscriber.Type.BAP, subscriberId = id))
   }
 
@@ -77,6 +75,6 @@ class RegistryService(
 
   object CacheName {
     const val gateways = "gateways"
-    const val bppById = "bppById"
+    const val bapById = "bapById"
   }
 }

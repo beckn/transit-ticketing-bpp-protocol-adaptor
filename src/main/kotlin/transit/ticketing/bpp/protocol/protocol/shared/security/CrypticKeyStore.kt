@@ -31,7 +31,7 @@ class RegistryKeyStore @Autowired constructor(
 ) : CrypticKeyStore {
 
   override fun getBase64PublicKey(subscriberId: String, keyId: String): String? =
-    registryService.lookupBppById(subscriberId).map {
+    registryService.lookupBapById(subscriberId).map {
       it.first().signing_public_key
     }.orNull()
 }

@@ -1,8 +1,8 @@
 package transit.ticketing.bpp.protocol.protocol.shared.dtos
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.Default
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.ProtocolIntent
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.Default
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolIntent
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)

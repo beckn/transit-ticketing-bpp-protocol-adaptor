@@ -11,6 +11,13 @@ spring:
   jackson:
     property-naming-strategy: SNAKE_CASE
     default-property-inclusion: non_null
+context:
+  domain: nic2004:52110
+  city: std:080
+  country: IND
+  bpp_id: bap.stayhalo.in
+  bpp_uri: http://localhost:8080/api/v1/secure/
+  ttl_seconds: 20
 registry_service:
   url: https://demo4460370.mockable.io/registry/
   retry:
@@ -43,8 +50,8 @@ bpp_service:
     connection_in_seconds: 10
     read_in_seconds: 10
     write_in_seconds: 10
-protocol_service:
-  url: {{ protocol_url }}
+client_service:
+  url: {{ client_url }}
   retry:
     max_attempts: 3
     initial_interval_in_millis: 1000

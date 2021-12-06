@@ -1,5 +1,8 @@
 ---
 var: this
+mongo_host: 10.0.1.10
+mongo_port: 27017
+bpp_mongo_name: transit_protocol_bpp
 registry_url: https://pilot-gateway-1.beckn.nsdl.co.in/
 client_url: http://internal-biab-qa-bap-api-1627558606.ap-south-1.elb.amazonaws.com:9001/
 public_key: 6KPy1uXandCNV7kyhTDqMznPU9dM+mitQZTKT1xWVPo=

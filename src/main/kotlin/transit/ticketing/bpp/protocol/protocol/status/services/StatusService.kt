@@ -10,7 +10,10 @@ import org.springframework.util.StringUtils.hasText
 import transit.ticketing.bpp.protocol.errors.HttpError
 import transit.ticketing.bpp.protocol.errors.bpp.BppError
 import transit.ticketing.bpp.protocol.protocol.discovery.services.SearchService
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.*
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolAckResponse
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolContext
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolOrderStatusRequestMessage
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ResponseMessage
 import transit.ticketing.bpp.protocol.protocol.shared.services.RegistryService
 
 @Service
@@ -27,11 +30,11 @@ class StatusService @Autowired constructor(
       return Either.Left(BppError.BadRequestError)
     }
     return registryService
-        .lookupBppById(context.bppId!!)
+        .lookupBapById(context.bapId!!)
         .flatMap {
             bppClientStatusService.postStatus(it.first(), context, message)
         }.flatMap {
-            Either.Right(ProtocolAckResponse(context,ResponseMessage.ack()))
+            Either.Right(ProtocolAckResponse(context, ResponseMessage.ack()))
         }
   }
 

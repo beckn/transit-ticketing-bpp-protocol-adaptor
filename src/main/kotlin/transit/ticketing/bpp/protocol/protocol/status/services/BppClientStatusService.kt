@@ -10,12 +10,14 @@ import org.springframework.stereotype.Service
 import retrofit2.Response
 import transit.ticketing.bpp.protocol.errors.bpp.BppError
 import transit.ticketing.bpp.protocol.protocol.external.hasBody
-import transit.ticketing.bpp.protocol.protocol.external.isAckNegative
 import transit.ticketing.bpp.protocol.protocol.external.isInternalServerError
-import transit.ticketing.bpp.protocol.protocol.external.provider.BppClient
 import transit.ticketing.bpp.protocol.protocol.external.provider.BppClientFactory
+import transit.ticketing.bpp.protocol.protocol.external.provider.BppServiceClient
 import transit.ticketing.bpp.protocol.protocol.external.registry.SubscriberDto
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.*
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolContext
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolOnOrderStatus
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolOrderStatusRequest
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolOrderStatusRequestMessage
 
 
 @Service
@@ -55,7 +57,7 @@ class BppClientStatusService @Autowired constructor(
   }
 
   private fun invokeBppOrderStatusApi(
-    bppServiceClient: BppClient,
+    bppServiceClient: BppServiceClient,
     context : ProtocolContext,
     message: ProtocolOrderStatusRequestMessage
   ): Response<ProtocolOnOrderStatus> {

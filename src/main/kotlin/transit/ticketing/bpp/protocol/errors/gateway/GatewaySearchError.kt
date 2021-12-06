@@ -3,8 +3,8 @@ package transit.ticketing.bpp.protocol.errors.gateway
 
 import org.springframework.http.HttpStatus
 import transit.ticketing.bpp.protocol.errors.HttpError
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.ProtocolError
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.ResponseMessage
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolError
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ResponseMessage
 
 sealed class GatewaySearchError : HttpError {
   val gatewayError = ProtocolError("BAP_003", "Gateway search returned error")
