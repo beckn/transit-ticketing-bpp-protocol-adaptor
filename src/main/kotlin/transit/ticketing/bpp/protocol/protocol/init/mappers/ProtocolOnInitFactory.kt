@@ -21,9 +21,9 @@ class ProtocolOnInitFactory @Autowired constructor() {
           id = providerIdCode
         ),
         items = message.order.items,
-        billing = ProtocolBilling(name = message.order.billing.name),
+        billing = ProtocolBilling(name = message.order.billing?.name),
         fulfillment = ProtocolFulfillment(
-          id = message.order.fulfillment.id,
+          id = message.order.fulfillment?.id,
           start = ProtocolFulfillmentStart(
             location =  ProtocolLocation(id = response.trip.source.toString()),
             time = ProtocolTime(label = departure, timestamp = "")

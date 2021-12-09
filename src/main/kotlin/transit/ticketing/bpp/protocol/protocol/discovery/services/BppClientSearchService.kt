@@ -26,10 +26,10 @@ class BppClientSearchService @Autowired constructor(
   ) {
   private val log: Logger = LoggerFactory.getLogger(BppClientStatusService::class.java)
 
-  fun search(subscriberDto: SubscriberDto, context: ProtocolContext, intent: ProtocolIntent)
+  fun search(subscriberDto: SubscriberDto?, context: ProtocolContext, intent: ProtocolIntent)
       : Either<BppError, ProtocolOnSearch> {
     return Either.catch {
-      log.info("Initiating Search using gateway: {}. Context: {}", subscriberDto, context)
+      log.info("Initiating Search using gateway: {}. Context: {}", context)
       val clientService = bppServiceClientFactory.getClient(clientUrl)
       val request = ClientSearchRequest(origin = intent.fulfillment?.start?.location?.gps.toString(),
         destination = intent.fulfillment?.end?.location?.gps.toString())

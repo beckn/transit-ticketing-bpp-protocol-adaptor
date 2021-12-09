@@ -51,7 +51,9 @@ class RegistryService(
       log.info("Lookup subscriber response. Status: {}, Body: {}", httpResponse.code(), httpResponse.body())
       return when {
         httpResponse.isInternalServerError() -> Left(RegistryLookupError.Internal)
-        noSubscribersFound(httpResponse) -> Left(RegistryLookupError.NoSubscriberFound)
+        noSubscribersFound(httpResponse) ->Right(
+         listOf()
+        )//Left(RegistryLookupError.NoSubscriberFound)
         else -> Right(
           httpResponse.body()!!
         )

@@ -32,7 +32,7 @@ class BapOnSearchService @Autowired constructor(
     return Either.catch {
       log.info("Initiating OnSearch : {}. Context: {}", subscriberDto)
 //      val request = protocolOnSearchFactory.create(context = context)
-      val clientService = bapServiceFactory.getBapClient(subscriberDto.subscriber_url)
+      val clientService = bapServiceFactory.getBapClient(subscriberDto?.subscriber_url)
       val httpResponse = clientService.onSearch(protocolRequest).execute()
       log.info("OnSearch response. Status: {}, Body: {}", httpResponse.code(), httpResponse.body())
       return when {

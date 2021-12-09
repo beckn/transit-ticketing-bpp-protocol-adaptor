@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils.hasText
 import transit.ticketing.bpp.protocol.errors.HttpError
+import transit.ticketing.bpp.protocol.errors.bpp.BppError
+import transit.ticketing.bpp.protocol.errors.registry.RegistryLookupError
 import transit.ticketing.bpp.protocol.protocol.external.registry.SubscriberDto
 import transit.ticketing.bpp.protocol.protocol.status.services.StatusService
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolAckResponse
@@ -25,14 +27,21 @@ class SearchService @Autowired constructor(
 
   fun search(context: ProtocolContext, intent: ProtocolIntent): Either<HttpError, ProtocolAckResponse> {
     log.info("Got search request with intent: {} ", intent)
-    lateinit var subscriber :SubscriberDto
+     var subscriber :SubscriberDto? = null
       return registryService
         .lookupBapById(context.bapId!!)
         .flatMap {
-          subscriber=   it.first()
-            bppClientSearchService.search(subscriber, context, intent)
+          if(!it.isNullOrEmpty()){
+              subscriber = it.first()
+          }
+        bppClientSearchService.search(subscriber, context, intent)
+
         }.flatMap {
-          bapOnSearchService.onSearch(subscriber,context, it)
+          return if(subscriber != null){
+             bapOnSearchService.onSearch(subscriber!!,context, it)
+          }else{
+             Either.Left(RegistryLookupError.Internal)
+          }
         }
   }
 

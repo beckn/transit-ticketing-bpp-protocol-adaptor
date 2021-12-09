@@ -2,10 +2,12 @@ package transit.ticketing.bpp.protocol.protocol.discovery.mappers
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import transit.ticketing.bpp.protocol.protocol.shared.Util
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.client.Availability
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.client.Location
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.client.SearchResponse
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.*
+import transit.ticketing.bpp.protocol.protocol.shared.security.Cryptic
 
 
 @Component
@@ -13,7 +15,7 @@ class ProtocolOnSearchFactory @Autowired constructor() {
     val arrival = "Arrival"
     val departure = "Departure"
     val providerName = "State Water Transport Department"
-    val providerIdCode = "SWTD"
+    val providerIdCode = "KSWTD"
 
     fun create(response: SearchResponse? = null, context: ProtocolContext, intent: ProtocolIntent? = null) =
         ProtocolOnSearch(
@@ -83,7 +85,7 @@ class ProtocolOnSearchFactory @Autowired constructor() {
             for (avail: Availability in availability) {
                 listOfFullfillment.add(
                     ProtocolFulfillment(
-                        id = avail.trip_id.toString(),
+                        id = generateFullFillmentId(avail),
                         start = ProtocolFulfillmentStart(
                             location = ProtocolLocation(
                                 id = avail.departure.stopId,
@@ -107,5 +109,11 @@ class ProtocolOnSearchFactory @Autowired constructor() {
             }
         }
         return listOfFullfillment
+    }
+
+    private fun generateFullFillmentId(avail: Availability): String {
+        val data = avail.trip_id.toString()+","+avail.arrival+","+avail.departure
+        val uuid =  Util.uuidToBase64(data)
+        return uuid
     }
 }

@@ -8,11 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
+import transit.ticketing.bpp.protocol.errors.HttpError
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.*
 import transit.ticketing.bpp.protocol.protocol.status.services.StatusService
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolAckResponse
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolContext
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolOrderStatusRequest
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ResponseMessage
 import transit.ticketing.bpp.protocol.schemas.factories.ContextFactory
 
 @RestController
@@ -24,22 +22,30 @@ class StatusController @Autowired constructor(
 
   @PostMapping("/protocol/v1/status")
   @ResponseBody
-  fun confirmV1(@RequestBody request: ProtocolOrderStatusRequest): ResponseEntity<ProtocolAckResponse> {
+  fun confirmV1(@RequestBody request: ProtocolOrderStatusRequest): ResponseEntity<ProtocolOnOrderStatus> {
     val protocolContext =
       contextFactory.create(transactionId = request.context.transactionId, action = ProtocolContext.Action.SEARCH,
         bapId = request.context.bapId)
-    return confirmService.postOrderRequest(protocolContext, request.message)
+    return confirmService.getOrderStatusRequest(protocolContext, request.message)
       .fold(
         {
           log.error("Error during init request. Error: {}", it)
-          ResponseEntity
-            .status(it.status().value())
-            .body(ProtocolAckResponse(protocolContext, it.message(), it.error()))
+          mapToErrorResponse(it, protocolContext)
         },
         {
           log.info("Successfully initiated Search")
-          ResponseEntity.ok(ProtocolAckResponse(protocolContext, ResponseMessage.ack()))
+          ResponseEntity.ok(it)
         }
       )
   }
+
+  private fun mapToErrorResponse(it: HttpError, context: ProtocolContext? = null) = ResponseEntity
+    .status(it.status())
+    .body(
+      ProtocolOnOrderStatus(
+        context = context,
+        error = it.error(),
+        message = null
+      )
+    )
 }

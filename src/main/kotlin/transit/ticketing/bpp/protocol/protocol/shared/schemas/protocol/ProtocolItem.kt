@@ -5,5 +5,5 @@ data class ProtocolItem @Default constructor(
     val fulfillmentId: String? = null,
     val descriptor: ProtocolDescriptor? = null,
     val price: ProtocolPrice? = null,
-    val quantity: ProtocolItemQuantityAllocated
+    val quantity: ProtocolItemQuantityAllocated? = null
 )

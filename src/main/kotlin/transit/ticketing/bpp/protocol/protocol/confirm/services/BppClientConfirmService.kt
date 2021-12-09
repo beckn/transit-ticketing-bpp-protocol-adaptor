@@ -28,11 +28,11 @@ class BppClientConfirmService @Autowired constructor(
   private val log: Logger = LoggerFactory.getLogger(BppClientStatusService::class.java)
 
   fun blockTicket(
-    subscriberDto: SubscriberDto, context: ProtocolContext,
+    subscriberDto: SubscriberDto?, context: ProtocolContext,
     message: ProtocolConfirmRequestMessage
   ): Either<BppError, ProtocolOnConfirm> {
     return Either.catch {
-      log.info("Initiating BookTicket using client Bpp: {}. Context: {}", subscriberDto, context)
+      log.info("Initiating BookTicket using client Bpp: {}. Context: {}", context)
       val clientService = bppServiceClientFactory.getClient(clientUrl)
       val request : ClientConfirmRequest= buildConfirmRequest(message,context)
       return if(request.seats != 0 ){
@@ -61,10 +61,10 @@ class BppClientConfirmService @Autowired constructor(
     context: ProtocolContext
   ): ClientConfirmRequest {
     return ClientConfirmRequest(
-      source = message.order.fulfillment.start?.location?.id ?: "",
-      destination = message.order.fulfillment.end?.location?.id ?: "",
-      tripId = message.order.fulfillment.id?:"",
-      date = context.timestamp.toString(),
+      source = message.order.fulfillment?.start?.location?.id ?: "",
+      destination = message.order.fulfillment?.end?.location?.id ?: "",
+      tripId = message.order.fulfillment?.id?:"",
+      date = "2021-12-07",//"context.timestamp.toString()",
       seats = message.order?.items?.first()?.quantity?.count?:0,
     )
   }
