@@ -3,7 +3,7 @@ package transit.ticketing.bpp.protocol.message.entities
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.Default
 
 data class ProtocolLocationDao @Default constructor(
-    val id: String? = null,
+    var id: String? = null,
     val descriptor: ProtocolDescriptorDao? = null,
     val gps: String? = null,
     val stationCode: String? = null,

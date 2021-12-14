@@ -12,7 +12,7 @@ data class ProtocolItemDao @Default constructor(
 )
 
 data class ProtocolDescriptorDao @Default constructor(
-    val name: String?,
+    val name: String?= null,
     val code: String? = null,
     val symbol: String? = null,
     val shortDesc: String? = null,

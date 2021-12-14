@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import transit.ticketing.bpp.protocol.protocol.init.services.InitService
+import transit.ticketing.bpp.protocol.protocol.shared.dtos.InitRequestDto
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolAckResponse
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolContext
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolInitRequest
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ResponseMessage
 import transit.ticketing.bpp.protocol.schemas.factories.ContextFactory
 
@@ -24,7 +24,7 @@ class InitController @Autowired constructor(
 
   @PostMapping("/protocol/v1/init")
   @ResponseBody
-  fun initV1(@RequestBody request: ProtocolInitRequest): ResponseEntity<ProtocolAckResponse> {
+  fun initV1(@RequestBody request: InitRequestDto): ResponseEntity<ProtocolAckResponse> {
     val protocolContext =
       contextFactory.create(transactionId = request.context.transactionId, action = ProtocolContext.Action.SEARCH,
         bapId = request.context.bapId)

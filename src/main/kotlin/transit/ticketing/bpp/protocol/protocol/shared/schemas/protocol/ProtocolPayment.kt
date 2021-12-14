@@ -8,7 +8,7 @@ data class ProtocolPayment @Default constructor(
     val tlMethod: TlMethod? = null,
     val params: Map<String, String>? = null,
     val type: Type?= null,
-    val status: Status? = null,
+    var status: Status? = null,
     val time: ProtocolTime? = null
 ) {
     /**

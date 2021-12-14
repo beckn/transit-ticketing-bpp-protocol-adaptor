@@ -15,3 +15,5 @@ data class SearchRequestMessageDto @Default constructor(
   val intent: ProtocolIntent
 )
 
+
+

@@ -49,12 +49,4 @@ class BppClientSearchService @Autowired constructor(
     }
   }
 
-  private fun buildProtocolSearchRequest(context: ProtocolContext, intent: ProtocolIntent) =
-    ProtocolSearchRequest(
-      context,
-      ProtocolSearchRequestMessage(
-        intent
-      )
-    )
-
 }

@@ -1,7 +1,7 @@
 package transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol
 
 data class ProtocolLocation @Default constructor(
-    val id: String? = null,
+    var id: String? = null,
     val descriptor: ProtocolDescriptor? = null,
     val gps: String? = null,
     val stationCode: String? = null,

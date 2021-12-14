@@ -1,5 +1,7 @@
 package transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+
 data class ProtocolOrder @Default constructor(
     val provider: ProtocolSelectMessageSelectedProvider? = null,
     val items: List<ProtocolItem>? = null,
@@ -10,8 +12,10 @@ data class ProtocolOrder @Default constructor(
     val id: String? = null,
     val state: String? = null,
     val createdAt: java.time.OffsetDateTime? = null,
-    val updatedAt: java.time.OffsetDateTime? = null
-)
+    val updatedAt: java.time.OffsetDateTime? = null,
+    @JsonIgnore val boatId :String ? = null,
+    var ticket_code: String? = null
+    )
 
 data class ProtocolSelectMessageSelectedProvider @Default constructor(
     val id: String? = null,

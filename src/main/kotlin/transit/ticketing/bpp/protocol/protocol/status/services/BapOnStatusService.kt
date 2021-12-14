@@ -1,4 +1,4 @@
-package transit.ticketing.bpp.protocol.protocol.confirm.services
+package transit.ticketing.bpp.protocol.protocol.status.services
 
 import arrow.core.Either
 import arrow.core.Either.Left
@@ -7,25 +7,22 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import transit.ticketing.bpp.protocol.errors.bpp.BppError
-import transit.ticketing.bpp.protocol.protocol.confirm.mappers.ProtocolOnConfirmFactory
 import transit.ticketing.bpp.protocol.protocol.external.hasBody
 import transit.ticketing.bpp.protocol.protocol.external.isInternalServerError
 import transit.ticketing.bpp.protocol.protocol.external.registry.SubscriberDto
-import transit.ticketing.bpp.protocol.protocol.status.services.BppClientStatusService
-import transit.ticketing.bpp.protocol.protocol.discovery.mappers.ProtocolOnSearchFactory
 import transit.ticketing.bpp.protocol.protocol.external.provider.BapServiceFactory
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.*
 
 
 @Service
-class BapOnConfirmService @Autowired constructor(
+class BapOnStatusService @Autowired constructor(
   private val bapServiceFactory: BapServiceFactory,
   ) {
   private val log: Logger = LoggerFactory.getLogger(BppClientStatusService::class.java)
 
 
 
-  fun onPostConfirm(
+  fun onStatus(
     subscriberDto: SubscriberDto, context: ProtocolContext,
     request: ProtocolOnConfirm
   ): Either<BppError, ProtocolAckResponse> {

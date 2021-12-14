@@ -7,16 +7,19 @@ import org.litote.kmongo.eq
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
 import transit.ticketing.bpp.protocol.errors.HttpError
 import transit.ticketing.bpp.protocol.errors.bpp.BppError
 import transit.ticketing.bpp.protocol.errors.database.DatabaseError
 import transit.ticketing.bpp.protocol.message.entities.OnConfirmDao
+import transit.ticketing.bpp.protocol.message.entities.OnOrderStatusDao
 import transit.ticketing.bpp.protocol.message.mappers.GenericResponseMapper
 import transit.ticketing.bpp.protocol.message.services.ResponseStorageService
 import transit.ticketing.bpp.protocol.protocol.discovery.services.SearchService
 import transit.ticketing.bpp.protocol.protocol.external.registry.SubscriberDto
 import transit.ticketing.bpp.protocol.protocol.shared.Util
+import transit.ticketing.bpp.protocol.protocol.shared.dtos.ConfirmRequestMessageDto
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.*
 import transit.ticketing.bpp.protocol.protocol.shared.services.RegistryService
 
@@ -24,27 +27,44 @@ import transit.ticketing.bpp.protocol.protocol.shared.services.RegistryService
 class ConfirmService @Autowired constructor(
     private val registryService: RegistryService,
     private val bppClientConfirmService: BppClientConfirmService,
-    private val bapOnConfirmService: BapOnConfirmService,
-    val repository: ResponseStorageService<ProtocolOnConfirm, OnConfirmDao>,
-    val mapper: GenericResponseMapper<ProtocolOnConfirm, OnConfirmDao>,
+    val confirmRepository : ResponseStorageService<ProtocolOnConfirm, OnConfirmDao>,
+    val statusRepository : ResponseStorageService<ProtocolOnOrderStatus, OnOrderStatusDao>,
 ) {
     val log: Logger = LoggerFactory.getLogger(SearchService::class.java)
 
     fun postConfirmRequest(
         context: ProtocolContext,
-        message: ProtocolConfirmRequestMessage
+        message: ConfirmRequestMessageDto
     ): Either<HttpError, ProtocolOnConfirm> {
         log.info("Confirm Service : Got init request with message: {} ", message)
         var subscriber: SubscriberDto? = null
-        if (message?.order == null ||
-            message.order.items.isNullOrEmpty()
-        ) {
+        var arrivalDate: String? = null
+        var departureDate: String? = null
+        var tripId: String? = null
+        if (message?.order == null || message.order.items.isNullOrEmpty()) {
             log.info("Empty order received, no op. Order: {}", message)
             return Either.Left(BppError.BadRequestError)
         }
-        if(message.order.fulfillment?.id!=null){
-            val data = Util.uuidFromBase64(message.order.fulfillment.id)
-            return Either.Left(BppError.BadRequestError)
+        if (message.order.fulfillment?.id != null) {
+            val arrayOfFulfillment = message.order.fulfillment.id!!.split("-")
+            if (arrayOfFulfillment.isNotEmpty() && arrayOfFulfillment.size == 5) {
+                arrivalDate = Util.miliSecondsToDateString(arrayOfFulfillment[1])
+                departureDate = Util.miliSecondsToDateString(arrayOfFulfillment[2])
+                tripId = arrayOfFulfillment[0]
+                var startLocation = ProtocolFulfillmentStart(
+                    location = ProtocolLocation(id = arrayOfFulfillment[3]),
+                    time = ProtocolTime(timestamp = arrivalDate!!)
+                )
+                var endLocation = ProtocolFulfillmentEnd(
+                    location = ProtocolLocation(id = arrayOfFulfillment[4]),
+                    time = ProtocolTime(timestamp = departureDate!!)
+                )
+                message.order.fulfillment.start = startLocation
+                message.order.fulfillment.end = endLocation
+            }
+            if (tripId == null || arrivalDate.isNullOrEmpty() || departureDate.isNullOrEmpty()) {
+                return Either.Left(BppError.BadRequestError)
+            }
         }
         return registryService
             .lookupBapById(context.bapId!!)
@@ -53,7 +73,7 @@ class ConfirmService @Autowired constructor(
                     subscriber = subscriberInfo.first()
                 }
                 if (context.transactionId != null) {
-                    repository.findById(context.transactionId).fold(
+                    confirmRepository.findById(context.transactionId).fold(
                         {
                             // No info available for this Transaction Id in DB
                             bppClientConfirmService.blockTicket(null, context, message).fold(
@@ -81,16 +101,15 @@ class ConfirmService @Autowired constructor(
             }
     }
 
-    fun updateOrder(protocolOnConfirm: ProtocolOnConfirm): Either<DatabaseError, ProtocolOnConfirm> {
-        return if (protocolOnConfirm.context?.transactionId == null) {
+    fun updateOrder(onConfirmDao: OnConfirmDao): Either<DatabaseError, ProtocolOnConfirm> {
+        return if (onConfirmDao.context?.transactionId == null) {
             log.error("Confirm Service :Transaction id is not available")
             Either.Left(DatabaseError.NotFound)
         } else {
-            var dataDao = mapper.protocolToEntity(protocolOnConfirm)
             log.info("Confirm Service : Updating db on confirm callback")
-            return repository.updateDocByQuery(
-                OnConfirmDao::context / ProtocolContext::transactionId eq protocolOnConfirm.context.transactionId,
-                dataDao
+            return confirmRepository.updateDocByQuery(
+                OnConfirmDao::context / ProtocolContext::transactionId eq onConfirmDao.context.transactionId,
+                onConfirmDao
             )
         }
     }

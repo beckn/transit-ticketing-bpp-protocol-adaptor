@@ -1,31 +1,32 @@
-package transit.ticketing.bpp.protocol.protocol.confirm.mappers
+package transit.ticketing.bpp.protocol.protocol.status.mappers
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import transit.ticketing.bpp.protocol.message.entities.*
 import transit.ticketing.bpp.protocol.protocol.shared.Util
+import transit.ticketing.bpp.protocol.protocol.shared.dtos.ConfirmRequestMessageDto
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.client.BlockBookResponse
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.client.Trip
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolContext
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.*
 import java.net.URI
 
 @Component
-class ProtocolOnConfirmFactory @Autowired constructor() {
+class ProtocolOnStatusFactory @Autowired constructor() {
   val arrival = "Arrival"
   val departure = "Departure"
   val providerIdCode = "SWTD"
 
-  fun create(response: BlockBookResponse, context: ProtocolContext) = OnConfirmDao(
+  fun create(response: BlockBookResponse, context: ProtocolContext) = OnOrderStatusDao(
     context = context,
     error = null,
-    message = ProtocolOnConfirmMessageDao(
+    message = OnOrderStatusMessageDao(
       order = ProtocolOrderDao(
         id = response.ticket_no?.toString(),
         state = "Active",
         provider = ProtocolSelectMessageSelectedProviderDao(
           id = providerIdCode
         ),
-        boatId=response.trip.boat_id,
+        boatId = response.trip.boat_id,
         items = listOf(ProtocolItemDao(
           id = "ONE_WAY_TICKET" ,
           fulfillmentId = generateFullFillmentId(trip = response.trip),
@@ -50,7 +51,7 @@ class ProtocolOnConfirmFactory @Autowired constructor() {
           ),
           end = ProtocolFulfillmentEndDao(
             location =  ProtocolLocationDao(id = response.trip.destination),
-            time = ProtocolTimeDao(label = arrival, timestamp = response.trip.arrival?.timestamp?:"")
+            time = ProtocolTimeDao(label = arrival, response.trip.arrival?.timestamp?: "")
           )
         ),
         quote = ProtocolQuotationDao(
@@ -78,7 +79,7 @@ class ProtocolOnConfirmFactory @Autowired constructor() {
           uri = URI("/protocol/v1/payment"),
           tlMethod = ProtocolPaymentDao.TlMethod.GET,
           type = ProtocolPaymentDao.Type.PREFULFILLMENT,
-          status = ProtocolPaymentDao.Status.NOTPAID
+          status = ProtocolPaymentDao.Status.PAID
         )
       )
     )

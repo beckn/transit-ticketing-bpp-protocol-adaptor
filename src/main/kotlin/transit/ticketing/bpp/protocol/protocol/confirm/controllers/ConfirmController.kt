@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import transit.ticketing.bpp.protocol.errors.HttpError
+import transit.ticketing.bpp.protocol.errors.bpp.BppError
+import transit.ticketing.bpp.protocol.message.entities.OnConfirmDao
 import transit.ticketing.bpp.protocol.protocol.confirm.services.ConfirmService
+import transit.ticketing.bpp.protocol.protocol.shared.dtos.ConfirmRequestDto
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.*
 import transit.ticketing.bpp.protocol.schemas.factories.ContextFactory
 
@@ -22,7 +25,7 @@ class ConfirmController @Autowired constructor(
 
   @PostMapping("/protocol/v1/confirm")
   @ResponseBody
-  fun confirmV1(@RequestBody request: ProtocolConfirmRequest): ResponseEntity<ProtocolOnConfirm> {
+  fun confirmV1(@RequestBody request: ConfirmRequestDto): ResponseEntity<ProtocolOnConfirm> {
     val protocolContext =
       contextFactory.create(transactionId = request.context.transactionId, action = ProtocolContext.Action.SEARCH,
         bapId = request.context.bapId)

@@ -8,6 +8,8 @@ import transit.ticketing.bpp.protocol.protocol.shared.schemas.client.Location
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.client.SearchResponse
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.*
 import transit.ticketing.bpp.protocol.protocol.shared.security.Cryptic
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 @Component
@@ -112,8 +114,9 @@ class ProtocolOnSearchFactory @Autowired constructor() {
     }
 
     private fun generateFullFillmentId(avail: Availability): String {
-        val data = avail.trip_id.toString()+","+avail.arrival+","+avail.departure
-        val uuid =  Util.uuidToBase64(data)
-        return uuid
+        val arrivalTiming = Util.dateToMiliseconds(avail.arrival.timestamp)
+        val departTiming = Util.dateToMiliseconds(avail.departure.timestamp)
+        val data = "${avail.trip_id}-$arrivalTiming-$departTiming-${avail.departure.stopId}-${avail.arrival.stopId}"
+        return data
     }
 }

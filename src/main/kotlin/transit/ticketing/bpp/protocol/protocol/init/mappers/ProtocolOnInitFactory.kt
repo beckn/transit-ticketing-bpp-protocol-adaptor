@@ -2,6 +2,7 @@ package transit.ticketing.bpp.protocol.protocol.init.mappers
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import transit.ticketing.bpp.protocol.protocol.shared.dtos.InitRequestMessageDto
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.client.BlockBookResponse
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.*
 import java.net.URI
@@ -13,7 +14,7 @@ class ProtocolOnInitFactory @Autowired constructor() {
   val departure = "Departure"
   val providerIdCode = "SWTD"
 
-  fun create(response : BlockBookResponse, context: ProtocolContext, message: ProtocolInitRequestMessage) = ProtocolOnInit(
+  fun create(response : BlockBookResponse, context: ProtocolContext, message: InitRequestMessageDto) = ProtocolOnInit(
     context = context,
     message = ProtocolOnInitMessage(
       order = ProtocolOnInitMessageInitialized(
@@ -42,7 +43,7 @@ class ProtocolOnInitFactory @Autowired constructor() {
           ttl = null
         ),
         payment = ProtocolPayment(
-          uri = URI(response.card_payment.payment_url),
+          uri = URI(response.card_payment.paymentUrl),
           tlMethod = ProtocolPayment.TlMethod.GET,
           type = ProtocolPayment.Type.PREFULFILLMENT,
           status = ProtocolPayment.Status.NOTPAID

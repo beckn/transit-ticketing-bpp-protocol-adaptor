@@ -14,6 +14,8 @@ import transit.ticketing.bpp.protocol.protocol.external.isInternalServerError
 import transit.ticketing.bpp.protocol.protocol.external.provider.BppClientFactory
 import transit.ticketing.bpp.protocol.protocol.external.registry.SubscriberDto
 import transit.ticketing.bpp.protocol.protocol.init.mappers.ProtocolOnInitFactory
+import transit.ticketing.bpp.protocol.protocol.shared.dtos.InitRequestDto
+import transit.ticketing.bpp.protocol.protocol.shared.dtos.InitRequestMessageDto
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.*
 
 
@@ -27,12 +29,12 @@ class BppClientInitService @Autowired constructor(
 
   fun  blockTicket(
     subscriberDto: SubscriberDto, context: ProtocolContext,
-    message: ProtocolInitRequestMessage
+    message: InitRequestMessageDto
   ): Either<BppError, ProtocolOnInit> {
     return Either.catch {
       log.info("Initiating Search using gateway: {}. Context: {}", subscriberDto, context)
       val clientService = bppServiceClientFactory.getClient(clientUrl)
-      val request = ProtocolInitRequest(message = message,context = context)
+      val request = InitRequestDto(message = message,context = context)
       return Either.Left(BppError.NullResponse)
 //      val httpResponse = clientService.blockTicket(request).execute()
 //

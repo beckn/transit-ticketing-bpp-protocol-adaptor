@@ -6,8 +6,6 @@ import java.time.LocalDateTime
 data class ProtocolCatalog @Default constructor(
     @JsonProperty("bpp/descriptor") val bppDescriptor: ProtocolDescriptor? = null,
     @JsonProperty("bpp/providers") val bppProviders: List<ProtocolProviderCatalog>? = null,
-    val id: String? = null,
-    val exp: LocalDateTime? = null
 )
 
 data class ProtocolProviderCatalog @Default constructor(

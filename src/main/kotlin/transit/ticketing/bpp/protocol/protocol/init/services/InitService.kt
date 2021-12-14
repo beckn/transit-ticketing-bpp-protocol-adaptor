@@ -10,9 +10,9 @@ import transit.ticketing.bpp.protocol.errors.HttpError
 import transit.ticketing.bpp.protocol.errors.bpp.BppError
 import transit.ticketing.bpp.protocol.protocol.discovery.services.SearchService
 import transit.ticketing.bpp.protocol.protocol.external.registry.SubscriberDto
+import transit.ticketing.bpp.protocol.protocol.shared.dtos.InitRequestMessageDto
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolAckResponse
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolContext
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolInitRequestMessage
 import transit.ticketing.bpp.protocol.protocol.shared.services.RegistryService
 
 @Service
@@ -23,7 +23,7 @@ class InitService @Autowired constructor(
 ) {
   val log: Logger = LoggerFactory.getLogger(SearchService::class.java)
 
-  fun postInit(context: ProtocolContext, message: ProtocolInitRequestMessage): Either<HttpError, ProtocolAckResponse> {
+  fun postInit(context: ProtocolContext, message: InitRequestMessageDto): Either<HttpError, ProtocolAckResponse> {
     log.info("Got init request with message: {} ", message)
     if (message?.order == null ||
             message.order.items.isNullOrEmpty()) {

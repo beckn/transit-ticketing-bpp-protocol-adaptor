@@ -12,13 +12,10 @@ data class ProtocolOrderDao @Default constructor(
     val id: String? = null,
     val state: String? = null,
     val createdAt: java.time.OffsetDateTime? = null,
-    val updatedAt: java.time.OffsetDateTime? = null
+    val updatedAt: java.time.OffsetDateTime? = null,
+    val boatId: String? = null
 )
 
 data class ProtocolSelectMessageSelectedProviderDao @Default constructor(
     val id: String,
-)
-
-data class ProtocolSelectMessageSelectedOffers @Default constructor(
-    val id: String
 )

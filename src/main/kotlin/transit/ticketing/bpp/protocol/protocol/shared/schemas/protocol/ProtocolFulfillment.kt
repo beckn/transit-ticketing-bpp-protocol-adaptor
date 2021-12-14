@@ -1,9 +1,9 @@
 package transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol
 
 data class ProtocolFulfillment @Default constructor(
-    val id: String? = null,
-    val start: ProtocolFulfillmentStart? = null,
-    val end: ProtocolFulfillmentEnd? = null,
+    var id: String? = null,
+    var start: ProtocolFulfillmentStart? = null,
+    var end: ProtocolFulfillmentEnd? = null,
 )
 
 data class ProtocolCustomer @Default constructor(
