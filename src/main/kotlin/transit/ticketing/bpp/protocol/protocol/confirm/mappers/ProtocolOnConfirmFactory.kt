@@ -87,7 +87,9 @@ class ProtocolOnConfirmFactory @Autowired constructor() {
   private fun generateFullFillmentId(trip: Trip): String {
     val arrivalTiming = Util.dateToMiliseconds(trip.arrival?.timestamp?:"")
     val departTiming = Util.dateToMiliseconds(trip.departure?.timestamp?:"")
-    val data = "${trip.trip_id}-$arrivalTiming-$departTiming-${trip.departure?.stopId}-${trip.arrival?.stopId}"
+    val data = "${trip.trip_id}-$departTiming-$arrivalTiming-${trip.departure?.stopId}-${trip.arrival?.stopId}"
     return data
+
+
   }
 }

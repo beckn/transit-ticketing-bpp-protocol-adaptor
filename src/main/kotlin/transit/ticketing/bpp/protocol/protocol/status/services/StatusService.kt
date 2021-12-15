@@ -59,16 +59,16 @@ class StatusService @Autowired constructor(
             if (message?.order?.fulfillment?.id != null) {
                 val arrayOfFulfillment = message?.order?.fulfillment.id!!.split("-")
                 if (arrayOfFulfillment.isNotEmpty() && arrayOfFulfillment.size == 5) {
-                    arrivalDate = Util.miliSecondsToDateString(arrayOfFulfillment[1])
-                    departureDate = Util.miliSecondsToDateString(arrayOfFulfillment[2])
+                    arrivalDate = Util.miliSecondsToDateString(arrayOfFulfillment[2])
+                    departureDate = Util.miliSecondsToDateString(arrayOfFulfillment[1])
                     tripId = arrayOfFulfillment[0]
                     var startLocation = ProtocolFulfillmentStart(
                         location = ProtocolLocation(id = arrayOfFulfillment[3]),
-                        time = ProtocolTime(timestamp = arrivalDate!!)
+                        time = ProtocolTime(timestamp = departureDate!!)
                     )
                     var endLocation = ProtocolFulfillmentEnd(
                         location = ProtocolLocation(id = arrayOfFulfillment[4]),
-                        time = ProtocolTime(timestamp = departureDate!!)
+                        time = ProtocolTime(timestamp = arrivalDate!!)
                     )
                     message?.order.fulfillment.start = startLocation
                     message?.order.fulfillment.end = endLocation
@@ -76,7 +76,7 @@ class StatusService @Autowired constructor(
                 if (tripId == null || arrivalDate.isNullOrEmpty() || departureDate.isNullOrEmpty()) {
                     return Either.Left(BppError.BadRequestError)
                 }
-                bppClientStatusService.bookTicket(it.context!!, message).flatMap { response ->
+                bppClientStatusService.bookTicket(it.context!!, message,tripId).flatMap { response ->
                     statusRepository.updateDocByQuery(
                         OnOrderStatusDao::context / ProtocolContext::transactionId eq it.context?.transactionId,
                         response

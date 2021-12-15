@@ -71,7 +71,6 @@ class BppClientConfirmService @Autowired constructor(
             tripId = message.order?.fulfillment?.id?.split("-")?.first() ?: "",
             date = Util.formatYYYYmmDD(context.timestamp.toString()) ?: "",
             seats = message.order?.items?.first()?.quantity?.count ?: 0,
-            slot = Util.formatHHmm(context.timestamp.toString()) ?: ""
         )
     }
 

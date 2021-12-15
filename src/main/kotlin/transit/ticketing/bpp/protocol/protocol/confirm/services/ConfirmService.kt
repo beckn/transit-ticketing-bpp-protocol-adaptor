@@ -48,16 +48,16 @@ class ConfirmService @Autowired constructor(
         if (message.order.fulfillment?.id != null) {
             val arrayOfFulfillment = message.order.fulfillment.id!!.split("-")
             if (arrayOfFulfillment.isNotEmpty() && arrayOfFulfillment.size == 5) {
-                arrivalDate = Util.miliSecondsToDateString(arrayOfFulfillment[1])
-                departureDate = Util.miliSecondsToDateString(arrayOfFulfillment[2])
+                arrivalDate = Util.miliSecondsToDateString(arrayOfFulfillment[2])
+                departureDate = Util.miliSecondsToDateString(arrayOfFulfillment[1])
                 tripId = arrayOfFulfillment[0]
                 var startLocation = ProtocolFulfillmentStart(
                     location = ProtocolLocation(id = arrayOfFulfillment[3]),
-                    time = ProtocolTime(timestamp = arrivalDate!!)
+                    time = ProtocolTime(timestamp = departureDate!!)
                 )
                 var endLocation = ProtocolFulfillmentEnd(
                     location = ProtocolLocation(id = arrayOfFulfillment[4]),
-                    time = ProtocolTime(timestamp = departureDate!!)
+                    time = ProtocolTime(timestamp = arrivalDate!!)
                 )
                 message.order.fulfillment.start = startLocation
                 message.order.fulfillment.end = endLocation

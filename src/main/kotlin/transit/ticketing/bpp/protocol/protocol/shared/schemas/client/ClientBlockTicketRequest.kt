@@ -8,5 +8,4 @@ data class ClientBlockTicketRequest(
     val date : String,
     val seats : Int,
     @JsonProperty("trip_id") val tripId : String,
-    val slot : String
 )

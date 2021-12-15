@@ -70,13 +70,14 @@ class BppClientStatusService @Autowired constructor(
 
     fun bookTicket(
         context: ProtocolContext,
-        message: ProtocolOnConfirmMessage
+        message: ProtocolOnConfirmMessage,
+        tripId: String
     ): Either<BppError, OnOrderStatusDao> {
         return Either.catch {
             log.info("Initiating  BookTicket using client Bpp: {}")
             val clientService = bppServiceClientFactory.getClient(clientUrl)
-            val request: ClientBookTicketRequest = buildBookRequest(context, message)
-            return if (request.ticket_no.isNotEmpty() && !request.trip.trip_id.isNullOrEmpty()) {
+            val request: ClientBookTicketRequest = buildBookRequest(context, message, tripId)
+            return if (request.ticket_no.isNotEmpty()) {
                 val httpResponse = clientService.bookTicket(request).execute()
                 log.info("Book Ticket response. Status: {}, Body: {}", httpResponse.code(), httpResponse.body())
                 when {
@@ -101,7 +102,9 @@ class BppClientStatusService @Autowired constructor(
 
 
     private fun buildBookRequest(
-        context: ProtocolContext, message: ProtocolOnConfirmMessage
+        context: ProtocolContext,
+        message: ProtocolOnConfirmMessage,
+        tripId: String
     ): ClientBookTicketRequest {
         val order = message?.order
         return ClientBookTicketRequest(
@@ -109,12 +112,22 @@ class BppClientStatusService @Autowired constructor(
             payment_type = "CASH",
             trip = Trip(
                 boat_id = order?.boatId,
-                trip_id = order?.id,
+                trip_id = tripId,
                 source = order?.fulfillment?.start?.location?.id!!,
                 destination = order?.fulfillment?.end?.location?.id!!,
                 selected_slot = Util.formatHHmm(context?.timestamp.toString()) ?: "",
                 seats = order?.items?.get(0)?.quantity?.count,
                 date = Util.formatYYYYmmDD(context?.timestamp.toString()) ?: "",
+                arrival = StopInfo(
+                    slot = Util.formatHHmm(order?.fulfillment?.end?.time?.timestamp.toString())?:"" ,
+                    stopId = order?.fulfillment?.end?.location?.id!!,
+                    timestamp= order?.fulfillment?.end?.time?.timestamp?:""
+                ),
+                departure = StopInfo(
+                    slot = Util.formatHHmm(order?.fulfillment?.start?.time?.timestamp.toString())?:"",
+                    stopId = order?.fulfillment?.start?.location?.id!!,
+                    timestamp= order?.fulfillment?.start?.time?.timestamp?:""
+                )
             ),
             fare = Fare(
                 amount = order.quote?.price?.value?.toFloat()!!,

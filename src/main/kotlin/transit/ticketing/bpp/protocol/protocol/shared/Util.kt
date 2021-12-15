@@ -1,6 +1,5 @@
 package transit.ticketing.bpp.protocol.protocol.shared
 
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.client.Availability
 import java.nio.ByteBuffer
 import java.text.ParseException
 import java.text.SimpleDateFormat

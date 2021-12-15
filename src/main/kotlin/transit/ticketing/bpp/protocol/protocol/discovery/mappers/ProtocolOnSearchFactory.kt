@@ -116,7 +116,7 @@ class ProtocolOnSearchFactory @Autowired constructor() {
     private fun generateFullFillmentId(avail: Availability): String {
         val arrivalTiming = Util.dateToMiliseconds(avail.arrival.timestamp)
         val departTiming = Util.dateToMiliseconds(avail.departure.timestamp)
-        val data = "${avail.trip_id}-$arrivalTiming-$departTiming-${avail.departure.stopId}-${avail.arrival.stopId}"
+        val data = "${avail.trip_id}-$departTiming-$arrivalTiming-${avail.departure.stopId}-${avail.arrival.stopId}"
         return data
     }
 }
