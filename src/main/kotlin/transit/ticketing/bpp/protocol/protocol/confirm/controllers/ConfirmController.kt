@@ -25,15 +25,16 @@ class ConfirmController @Autowired constructor(
 
   @PostMapping("/protocol/v1/confirm")
   @ResponseBody
-  fun confirmV1(@RequestBody request: ConfirmRequestDto): ResponseEntity<ProtocolOnConfirm> {
+  fun confirmV1(@RequestBody request: ConfirmRequestDto): ResponseEntity<ProtocolAckResponse> {
     val protocolContext =
-      contextFactory.create(transactionId = request.context.transactionId, action = ProtocolContext.Action.SEARCH,
+      contextFactory.create(transactionId = request.context.transactionId, action = ProtocolContext.Action.CONFIRM,
         bapId = request.context.bapId)
-    return confirmService.postConfirmRequest(protocolContext, request.message)
+    return confirmService.confirm(protocolContext, request.message)
       .fold(
         {
           log.error("Error during init request. Error: {}", it)
           mapToErrorResponse(it,protocolContext)
+
         },
         {
           log.info("Successfully initiated Search")
@@ -44,10 +45,10 @@ class ConfirmController @Autowired constructor(
   private fun mapToErrorResponse(it: HttpError, context: ProtocolContext? = null) = ResponseEntity
     .status(it.status())
     .body(
-        ProtocolOnConfirm(
+        ProtocolAckResponse(
           context = context,
           error = it.error(),
-          message = null
+          message = it.message()
         )
     )
 }

@@ -14,7 +14,10 @@ import transit.ticketing.bpp.protocol.protocol.shared.schemas.client.SearchRespo
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.*
 
 interface BppServiceClient {
-  @GET("protocol/search_by_gps")
+//  @GET("protocol/search_by_gps")
+//  fun search(@Query("origin") origin: String,@Query("destination") destination: String ): Call<SearchResponse>
+//
+  @GET("search")
   fun search(@Query("origin") origin: String,@Query("destination") destination: String ): Call<SearchResponse>
 
   @POST("block_ticket")

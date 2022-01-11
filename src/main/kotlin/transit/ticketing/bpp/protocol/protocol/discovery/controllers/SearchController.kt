@@ -24,7 +24,7 @@ class SearchController @Autowired constructor(
 
   @PostMapping("/protocol/v1/search")
   @ResponseBody
-  fun searchV1(@RequestBody request: SearchRequestDto): ResponseEntity<ProtocolAckResponse> {
+   fun searchV1(@RequestBody request: SearchRequestDto): ResponseEntity<ProtocolAckResponse> {
     val protocolContext =
       contextFactory.create(transactionId = request.context.transactionId, action = ProtocolContext.Action.SEARCH,
         bapId = request.context.bapId)

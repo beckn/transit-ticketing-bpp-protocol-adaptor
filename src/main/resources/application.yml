@@ -12,8 +12,8 @@ spring:
     property-naming-strategy: SNAKE_CASE
     default-property-inclusion: non_null
 context:
-  domain: nic2004:52110
-  city: std:080
+  domain: nic2004:60221
+  city: Kochi
   country: IND
   bpp_id: bap.stayhalo.in
   bpp_uri: http://localhost:8080/api/v1/secure/
@@ -25,7 +25,7 @@ security:
     private_key: b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZWQyNTUxOQAAACDC6beMrEFF7VmZK7EY7QW3LYbe8XTik/pEve02ezDa1wAAAIix3rwCsd68AgAAAAtzc2gtZWQyNTUxOQAAACDC6beMrEFF7VmZK7EY7QW3LYbe8XTik/pEve02ezDa1wAAAEBrrQ8SBkbBxNo6Vj9AWQi61Cs+dfycUG7bBXW+g67c+MLpt4ysQUXtWZkrsRjtBbctht7xdOKT+kS97TZ7MNrXAAAAAAECAwQF
     unique_key_id: 29
 registry_service:
-  url: https://beckn-one.succinct.in/subscribers/
+  url: https://pilot-gateway-1.beckn.nsdl.co.in/
 #  https://pilot-gateway-1.beckn.nsdl.co.in/
   retry:
     max_attempts: 3
@@ -38,7 +38,7 @@ registry_service:
     read_in_seconds: 10
     write_in_seconds: 10
 bpp_registry_service:
-  url:  https://beckn-one.succinct.in/subscribers/
+  url:  https://pilot-gateway-1.beckn.nsdl.co.in/
 bpp_service:
   retry:
     max_attempts: 3

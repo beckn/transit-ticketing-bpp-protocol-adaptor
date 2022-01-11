@@ -91,7 +91,7 @@ object Util {
 
   fun formatHHmm(dateString: String): String? {
     val outputFormat = SimpleDateFormat("HH:mm")
-    val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     return try {
       val dateInput = inputFormat.parse(dateString)
       outputFormat.format(dateInput)

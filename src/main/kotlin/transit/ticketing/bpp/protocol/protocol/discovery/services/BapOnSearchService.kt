@@ -27,7 +27,7 @@ class BapOnSearchService @Autowired constructor(
   private val log: Logger = LoggerFactory.getLogger(BppClientStatusService::class.java)
 
 
-  fun onSearch(subscriberDto: SubscriberDto, context: ProtocolContext, protocolRequest: ProtocolOnSearch)
+  /* fun onSearch(subscriberDto: SubscriberDto, context: ProtocolContext, protocolRequest: ProtocolOnSearch)
           : Either<BppError, ProtocolAckResponse> {
     return Either.catch {
       log.info("Initiating OnSearch : {}. Context: {}", subscriberDto)
@@ -47,6 +47,23 @@ class BapOnSearchService @Autowired constructor(
       log.error("Error when initiating OnSearch", it)
       BppError.Internal
     }
-  }
+  }*/
 
+  suspend fun onSearch(subscriberDto: SubscriberDto, context: ProtocolContext, protocolRequest: ProtocolOnSearch) {
+      log.info("Initiating OnSearch : {}. Context: {}", subscriberDto)
+    println("Thread  onSearch is : ${Thread.currentThread().name}")
+
+      val clientService = bapServiceFactory.getBapClient(subscriberDto?.subscriber_url)
+    try{
+    val httpResponse = clientService.onSearch(protocolRequest)
+      if(httpResponse.error == null ){
+        log.info("Successful onSearch Bap Response: {}" )
+      }else{
+        log.info("Failed onSearch Bap Response: {}" )
+      }
+    }catch( e: Exception){
+      log.info("exception invoked OnSearch BAP Response: {}", e.message)
+      Left(BppError.Internal)
+    }
+  }
 }

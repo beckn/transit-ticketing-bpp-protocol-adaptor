@@ -2,16 +2,19 @@ package transit.ticketing.bpp.protocol.protocol.confirm.services
 
 import arrow.core.Either
 import arrow.core.flatMap
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.litote.kmongo.div
 import org.litote.kmongo.eq
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
 import transit.ticketing.bpp.protocol.errors.HttpError
 import transit.ticketing.bpp.protocol.errors.bpp.BppError
 import transit.ticketing.bpp.protocol.errors.database.DatabaseError
+import transit.ticketing.bpp.protocol.errors.registry.RegistryLookupError
 import transit.ticketing.bpp.protocol.message.entities.OnConfirmDao
 import transit.ticketing.bpp.protocol.message.entities.OnOrderStatusDao
 import transit.ticketing.bpp.protocol.message.mappers.GenericResponseMapper
@@ -27,15 +30,16 @@ import transit.ticketing.bpp.protocol.protocol.shared.services.RegistryService
 class ConfirmService @Autowired constructor(
     private val registryService: RegistryService,
     private val bppClientConfirmService: BppClientConfirmService,
+    private val bapOnConfirmService: BapOnConfirmService,
+    private val mapper: GenericResponseMapper<ProtocolOnConfirm, OnConfirmDao>,
     val confirmRepository : ResponseStorageService<ProtocolOnConfirm, OnConfirmDao>,
-    val statusRepository : ResponseStorageService<ProtocolOnOrderStatus, OnOrderStatusDao>,
 ) {
     val log: Logger = LoggerFactory.getLogger(SearchService::class.java)
 
-    fun postConfirmRequest(
+    fun confirm(
         context: ProtocolContext,
         message: ConfirmRequestMessageDto
-    ): Either<HttpError, ProtocolOnConfirm> {
+    ): Either<HttpError, ProtocolAckResponse> {
         log.info("Confirm Service : Got init request with message: {} ", message)
         var subscriber: SubscriberDto? = null
         var arrivalDate: String? = null
@@ -68,49 +72,45 @@ class ConfirmService @Autowired constructor(
         }
         return registryService
             .lookupBapById(context.bapId!!)
-            .flatMap { subscriberInfo ->
-                if (!subscriberInfo.isNullOrEmpty()) {
-                    subscriber = subscriberInfo.first()
-                }
-                if (context.transactionId != null) {
-                    confirmRepository.findById(context.transactionId).fold(
-                        {
-                            // No info available for this Transaction Id in DB
-                            bppClientConfirmService.blockTicket(null, context, message).fold(
-                                {
-                                    // Failed to block ticket in Bpp
-                                    log.error("Confirm Service : Failed to block ticket in Bpp")
-                                    return Either.Left(it)
-                                }, {
-                                    // Received Response from Block ticket with message
-                                    log.info("Confirm Service : Received Response from Block ticket with message")
-
-                                    return updateOrder(it)
-                                }
-                            )
-                        },
-                        {
-                            log.info("Confirm Service : Received Response from Db with message")
-                            return Either.Right(it!!)
-                        }
-                    )
+            .flatMap<HttpError, List<SubscriberDto>, OnConfirmDao> { subscriberInfo ->
+                subscriber = subscriberInfo.first()
+                if ( subscriber != null && context.transactionId != null) {
+                    // No info available for this Transaction Id in DB
+                    bppClientConfirmService.blockTicket(subscriber!!, context, message)
                 } else {
-                    log.error("Confirm Service : No Transaction Id available")
                     return Either.Left(BppError.BadRequestError)
                 }
+
+            }.flatMap {
+                CoroutineScope(Dispatchers.IO).launch{ bapPostConfirm(subscriber!!, context, it )}
+                return Either.Right(ProtocolAckResponse(context,ResponseMessage.ack()))
             }
     }
 
-    fun updateOrder(onConfirmDao: OnConfirmDao): Either<DatabaseError, ProtocolOnConfirm> {
-        return if (onConfirmDao.context?.transactionId == null) {
+    suspend fun bapPostConfirm(subscriberDto: SubscriberDto, context: ProtocolContext,
+                       onConfirmDao: OnConfirmDao ) {
+            bapOnConfirmService.postOnConfirm(subscriberDto, context, mapper.entityToProtocol(onConfirmDao)).fold(
+                {
+                    // Failed to block ticket in Bpp
+                    log.error("Confirm Service : Failed to block ticket in Bpp")
+                }, {
+                    // Received Response from Block ticket with message
+                    log.info("Confirm Service : Received Response from Block ticket with message")
+                    updateOrder(onConfirmDao)
+                })
+    }
+
+    private fun updateOrder(onConfirmDao: OnConfirmDao) {
+        log.error("Update Order Thread is ${Thread.currentThread().name}")
+        if (onConfirmDao.context?.transactionId == null) {
             log.error("Confirm Service :Transaction id is not available")
-            Either.Left(DatabaseError.NotFound)
         } else {
-            log.info("Confirm Service : Updating db on confirm callback")
-            return confirmRepository.updateDocByQuery(
+            val result =  confirmRepository.updateDocByQuery(
                 OnConfirmDao::context / ProtocolContext::transactionId eq onConfirmDao.context.transactionId,
                 onConfirmDao
             )
+            log.info("Confirm Service : Updating db on confirm callback $result" )
+
         }
     }
 

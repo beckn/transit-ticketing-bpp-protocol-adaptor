@@ -51,6 +51,7 @@ dependencies {
   implementation("io.github.resilience4j:resilience4j-retry:$resilience4jVersion")
   implementation("io.github.resilience4j:resilience4j-circuitbreaker:$resilience4jVersion")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.+")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
   implementation("org.litote.kmongo:kmongo:4.2.8")
 

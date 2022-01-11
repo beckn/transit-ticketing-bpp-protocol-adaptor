@@ -32,7 +32,8 @@ class BppClientSearchService @Autowired constructor(
       log.info("Initiating Search using gateway: {}. Context: {}", context)
       val clientService = bppServiceClientFactory.getClient(clientUrl)
       val request = ClientSearchRequest(origin = intent.fulfillment?.start?.location?.gps.toString(),
-        destination = intent.fulfillment?.end?.location?.gps.toString())
+        destination = intent.fulfillment?.end?.location?.gps.toString()
+      )
       val httpResponse = clientService.search(request.origin,request.destination).execute()
       log.info("Search response. Status: {}, Body: {}", httpResponse.code(), httpResponse.body())
       return when {
