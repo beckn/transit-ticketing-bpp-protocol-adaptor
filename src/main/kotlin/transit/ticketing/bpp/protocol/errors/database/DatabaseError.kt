@@ -7,10 +7,10 @@ import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolE
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ResponseMessage
 
 sealed class DatabaseError : HttpError {
-  val onWriteError = ProtocolError("BAP_006", "Error when writing to DB")
-  val onReadError = ProtocolError("BAP_007", "Error when reading from DB")
-  val notFoundError = ProtocolError("BAP_008", "No message with the given ID")
-  val onDeleteError = ProtocolError("BAP_009", "Error when deleting from DB")
+  val onWriteError = ProtocolError("BPP_006", "Error when writing to DB")
+  val onReadError = ProtocolError("BPP_007", "Error when reading from DB")
+  val notFoundError = ProtocolError("BPP_008", "No message with the given ID")
+  val onDeleteError = ProtocolError("BPP_009", "Error when deleting from DB")
 
   object OnWrite : DatabaseError() {
     override fun status(): HttpStatus = HttpStatus.INTERNAL_SERVER_ERROR

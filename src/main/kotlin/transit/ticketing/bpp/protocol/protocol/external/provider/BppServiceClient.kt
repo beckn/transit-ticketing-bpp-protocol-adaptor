@@ -25,8 +25,4 @@ interface BppServiceClient {
 
   @POST("book_ticket")
   fun bookTicket(@Body request: ClientBookTicketRequest): Call<BlockBookResponse>
-
-  @POST("status")
-  fun status(@Body request: OrderStatusRequestDto): Call<ProtocolOnOrderStatus>
-
 }

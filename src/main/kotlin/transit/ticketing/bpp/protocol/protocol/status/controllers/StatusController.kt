@@ -10,12 +10,10 @@ import transit.ticketing.bpp.protocol.errors.bpp.BppError
 import transit.ticketing.bpp.protocol.protocol.shared.dtos.OrderStatusRequestDto
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.*
 import transit.ticketing.bpp.protocol.protocol.status.services.StatusService
-import transit.ticketing.bpp.protocol.schemas.factories.ContextFactory
 
 @RestController
 class StatusController @Autowired constructor(
-  val statusService: StatusService,
-  val contextFactory: ContextFactory
+  val statusService: StatusService
 ) {
   val log: Logger = LoggerFactory.getLogger(this::class.java)
 

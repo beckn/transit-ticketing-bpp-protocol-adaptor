@@ -45,7 +45,8 @@ class ConfirmService @Autowired constructor(
         var arrivalDate: String? = null
         var departureDate: String? = null
         var tripId: String? = null
-        if (message?.order == null || message.order.items.isNullOrEmpty()) {
+        if (message?.order == null || message.order.items.isNullOrEmpty()
+            || message.order.fulfillment?.id == null) {
             log.info("Empty order received, no op. Order: {}", message)
             return Either.Left(BppError.BadRequestError)
         }

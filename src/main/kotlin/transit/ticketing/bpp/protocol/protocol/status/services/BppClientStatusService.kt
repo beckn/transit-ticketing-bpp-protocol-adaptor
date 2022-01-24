@@ -31,43 +31,6 @@ class BppClientStatusService @Autowired constructor(
     ) {
     private val log: Logger = LoggerFactory.getLogger(BppClientStatusService::class.java)
 
-    fun postStatus(
-        subscriberDto: SubscriberDto, context: ProtocolContext,
-        message: OrderStatusRequestMessageDto
-    ): Either<BppError, ProtocolOnOrderStatus> {
-        return Either.catch {
-            log.info("Initiating Search using gateway: {}. Context: {}", subscriberDto, context)
-            val clientService = bppServiceClientFactory.getClient(clientUrl)
-            val httpResponse =
-                invokeBppOrderStatusApi(
-                    bppServiceClient = clientService,
-                    context = context
-                )
-            log.info("Search response. Status: {}, Body: {}", httpResponse.code(), httpResponse.body())
-            return when {
-                httpResponse.isInternalServerError() -> Left(BppError.Internal)
-                !httpResponse.hasBody() -> Left(BppError.NullResponse)
-                else -> {
-                    log.info("Successfully invoked search on gateway. Response: {}", httpResponse.body())
-                    Either.Right(httpResponse.body()!!)
-                }
-            }
-        }.mapLeft {
-            log.error("Error when initiating search", it)
-            BppError.Internal
-        }
-    }
-
-    private fun invokeBppOrderStatusApi(
-        bppServiceClient: BppServiceClient,
-        context: ProtocolContext
-    ): Response<ProtocolOnOrderStatus> {
-        val statusRequest = OrderStatusRequestDto(
-            context = context
-        )
-        return bppServiceClient.status(statusRequest).execute()
-    }
-
     fun bookTicket(
         context: ProtocolContext,
         message: ProtocolOnConfirmMessage,

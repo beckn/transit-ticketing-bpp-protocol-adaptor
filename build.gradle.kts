@@ -52,6 +52,7 @@ dependencies {
   implementation("io.github.resilience4j:resilience4j-circuitbreaker:$resilience4jVersion")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.+")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+  testImplementation("com.github.tomakehurst:wiremock-jre8:2.28.0")
 
   implementation("org.litote.kmongo:kmongo:4.2.8")
 
@@ -61,6 +62,8 @@ dependencies {
   testImplementation("io.kotest:kotest-extensions-spring:4.4.3")
   testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
   testImplementation("io.kotest.extensions:kotest-assertions-arrow:1.0.2")
+  testImplementation("org.testcontainers:mongodb:1.15.3")
+
 }
 
 tasks.withType<KotlinCompile> {

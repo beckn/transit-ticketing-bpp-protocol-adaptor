@@ -3,6 +3,7 @@ package transit.ticketing.bpp.protocol.protocol.shared
 import java.nio.ByteBuffer
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.util.*
 
 
@@ -99,6 +100,15 @@ object Util {
       // TODO Auto-generated catch block
       e.printStackTrace()
       null
+    }
+  }
+
+  fun getCurrentDateInString(): String {
+    return try {
+      val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+      inputFormat.format(Date())
+    } catch (e:Exception) {
+      ""
     }
   }
 }
