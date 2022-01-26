@@ -1,7 +1,6 @@
 package transit.ticketing.bpp.protocol.protocol.discovery.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -30,8 +29,6 @@ import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolA
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolFulfillment
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolIntent
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ResponseStatus
-import transit.ticketing.bpp.protocol.schemas.factories.ContextFactory
-import transit.ticketing.bpp.protocol.schemas.factories.UuidFactory
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
@@ -62,7 +59,7 @@ class SearchControllerSpec @Autowired constructor(
 
             it("should invoke Client /search API on first  and fail") {
                 stubLookupApi()
-                val result: MvcResult = invokeSearchApi()
+                invokeSearchApi()
                     .andExpect(status().is5xxServerError)
                     .andExpect(jsonPath("$.message.ack.status", `is`(ResponseStatus.NACK.status)))
                     .andExpect(jsonPath("$.context.message_id", `is`(notNullValue())))

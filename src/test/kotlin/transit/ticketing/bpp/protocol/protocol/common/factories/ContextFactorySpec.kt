@@ -41,10 +41,8 @@ internal class ContextFactorySpec : DescribeSpec() {
         context.city shouldBe City.Pune.value
         context.action shouldBe ProtocolContext.Action.SEARCH
         context.coreVersion shouldBe ProtocolVersion.V0_9_1.value
-        context.bapId shouldBe "bap 1"
-        context.bapUri shouldBe "bap1.com"
-        context.bppId shouldBe null
-        context.bppUri shouldBe null
+        context.bppId shouldBe "bpp 1"
+        context.bppUri shouldBe "bpp1.com"
         context.transactionId shouldBe transactionId
         context.messageId shouldBe messageId
         context.clock shouldBe fixedUtcClock

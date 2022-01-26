@@ -41,9 +41,9 @@ class SearchService @Autowired constructor(
                 }
             }.flatMap {
                      CoroutineScope(Dispatchers.Default).launch {
-                        bapOnSearchService.onSearch(subscriber!!, context, it)
+                        val result = bapOnSearchService.onSearch(subscriber!!, context, it)
                     }
-                    Either.Right(ProtocolAckResponse(context, ResponseMessage.ack()))
+                   return Either.Right(ProtocolAckResponse(context, ResponseMessage.ack()))
             }
     }
 

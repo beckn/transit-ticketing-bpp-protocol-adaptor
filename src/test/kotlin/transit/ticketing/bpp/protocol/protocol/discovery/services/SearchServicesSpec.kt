@@ -2,7 +2,6 @@ package transit.ticketing.bpp.protocol.protocol.discovery.services
 
 import arrow.core.Either
 import io.kotest.assertions.arrow.either.shouldBeLeft
-import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.booleans.shouldBeTrue
 import kotlinx.coroutines.runBlocking
@@ -17,7 +16,6 @@ import transit.ticketing.bpp.protocol.errors.bpp.BppError
 import transit.ticketing.bpp.protocol.errors.registry.RegistryLookupError
 import transit.ticketing.bpp.protocol.protocol.common.factories.ContextFactoryInstance
 import transit.ticketing.bpp.protocol.protocol.common.factories.MockNetwork
-import transit.ticketing.bpp.protocol.protocol.common.factories.ResponseFactory
 import transit.ticketing.bpp.protocol.protocol.common.factories.SubscriberDtoFactory
 import transit.ticketing.bpp.protocol.protocol.external.registry.SubscriberDto
 import transit.ticketing.bpp.protocol.protocol.shared.dtos.SearchRequestMessageDto
@@ -88,7 +86,7 @@ class SearchServicesSpec @Autowired constructor() : DescribeSpec() {
 
     private fun stubClientBapApiSuccess(gateway: SubscriberDto ,intent: ProtocolIntent) = runBlocking{
         Mockito.`when`(bppClientSearchService.search(any(), any(), any())).thenReturn(Either.Right(successResponse))
-        Mockito.`when`(bapOnSearchService.onSearch(any(), any(), any())).thenReturn(Unit)
+        Mockito.`when`(bapOnSearchService.onSearch(any(), any(), any())).thenReturn(Either.Left(BppError.NullResponse))
     }
 
     private fun stubLookupApiFail() {
