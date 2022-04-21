@@ -47,8 +47,7 @@ import transit.ticketing.bpp.protocol.schemas.factories.ContextFactory
 class StatusControllerSpec @Autowired constructor(
     val mockMvc: MockMvc,
     val objectMapper: ObjectMapper,
-    val contextFactory: ContextFactory,
-    @Mock private val responseRepository: ResponseStorageService<ProtocolOnOrderStatus, OnOrderStatusDao>,
+    val contextFactory: ContextFactory
 ) : DescribeSpec() {
 
     init {
@@ -175,17 +174,6 @@ class StatusControllerSpec @Autowired constructor(
         val subsriberJson = objectMapper.writeValueAsString(MockNetwork.getAllSubscribers())
         registryBppLookupApi
             .stubFor(post("/lookup").willReturn(okJson(subsriberJson)))
-    }
-
-    private fun stubBppClientApi() {
-        retailBengaluruBpp
-            .stubFor(
-                post(urlEqualTo("/book_ticket")).willReturn(
-                    okJson(
-                        objectMapper.writeValueAsString(ResponseFactory.getBookResponseFromBpp())
-                    )
-                )
-            )
     }
 
 }

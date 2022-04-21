@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import transit.ticketing.bpp.protocol.errors.HttpError
-import transit.ticketing.bpp.protocol.errors.bpp.BppError
-import transit.ticketing.bpp.protocol.message.entities.OnConfirmDao
 import transit.ticketing.bpp.protocol.protocol.confirm.services.ConfirmService
 import transit.ticketing.bpp.protocol.protocol.shared.dtos.ConfirmRequestDto
-import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.*
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolAckResponse
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolContext
 import transit.ticketing.bpp.protocol.schemas.factories.ContextFactory
 
 @RestController

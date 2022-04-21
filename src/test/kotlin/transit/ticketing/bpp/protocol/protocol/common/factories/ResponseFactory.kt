@@ -1,5 +1,6 @@
 package transit.ticketing.bpp.protocol.protocol.common.factories
 
+import transit.ticketing.bpp.protocol.protocol.shared.Util
 import transit.ticketing.bpp.protocol.protocol.shared.Util.getCurrentDateInString
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.client.*
 import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.*
@@ -50,22 +51,24 @@ class ResponseFactory {
             upi_payment = UpiPayment(),
             card_payment = CardPayment(),
             ticket_code = "ticketcode"
-            )
+        )
 
-        fun getStatusFromBpp(context: ProtocolContext,currentDateTimeInMS :String) = ProtocolOnOrderStatus(
+        fun getStatusFromBpp(context: ProtocolContext, currentDateTimeInMS: String) = ProtocolOnOrderStatus(
             context = context,
             message = ProtocolOnOrderStatusMessage(
                 order = ProtocolOrder(
                     provider = ProtocolSelectMessageSelectedProvider(
                         id = "KSWTD"
                     ),
-                    items= listOf(ProtocolItem(
-                        id = "ONE_WAY_TICKET",
-                        fulfillmentId = "2001-$currentDateTimeInMS-$currentDateTimeInMS-100-101",
-                        descriptor = ProtocolDescriptor(name = "Kochi"),
-                        price = ProtocolPrice(currency = "INR",value = "122"),
-                        quantity = ProtocolItemQuantityAllocated(count = 1)
-                    )),
+                    items = listOf(
+                        ProtocolItem(
+                            id = "ONE_WAY_TICKET",
+                            fulfillmentId = "2001-$currentDateTimeInMS-$currentDateTimeInMS-100-101",
+                            descriptor = ProtocolDescriptor(name = "Kochi"),
+                            price = ProtocolPrice(currency = "INR", value = "122"),
+                            quantity = ProtocolItemQuantityAllocated(count = 1)
+                        )
+                    ),
                     fulfillment = ProtocolFulfillment(
                         id = "2001-$currentDateTimeInMS-$currentDateTimeInMS-100-101",
                         start = ProtocolFulfillmentStart(),
@@ -76,5 +79,33 @@ class ResponseFactory {
             )
         )
 
+        fun getConfirmFromBpp(context: ProtocolContext) :ProtocolOnConfirm{
+            val currentDateTimeInMS = Util.dateToMiliseconds(getCurrentDateInString())
+            return ProtocolOnConfirm(
+                context = context,
+                message = ProtocolOnConfirmMessage(
+                    order = ProtocolOrder(
+                        provider = ProtocolSelectMessageSelectedProvider(
+                            id = "KSWTD"
+                        ),
+                        items = listOf(
+                            ProtocolItem(
+                                id = "ONE_WAY_TICKET",
+                                fulfillmentId = "2001-$currentDateTimeInMS-$currentDateTimeInMS-100-101",
+                                descriptor = ProtocolDescriptor(name = "Kochi"),
+                                price = ProtocolPrice(currency = "INR", value = "122"),
+                                quantity = ProtocolItemQuantityAllocated(count = 1)
+                            )
+                        ),
+                        fulfillment = ProtocolFulfillment(
+                            id = "2001-$currentDateTimeInMS-$currentDateTimeInMS-100-101",
+                            start = ProtocolFulfillmentStart(),
+                            end = ProtocolFulfillmentEnd()
+                        )
+                    )
+
+                )
+            )
+        }
     }
 }

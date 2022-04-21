@@ -4,9 +4,9 @@ import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.Default
 
 data class ProtocolOrderDao @Default constructor(
     val provider: ProtocolSelectMessageSelectedProviderDao? = null,
-    val items: List<ProtocolItemDao>,
-    val billing: ProtocolBillingDao,
-    val fulfillment: ProtocolFulfillmentDao,
+    val items: List<ProtocolItemDao>?,
+    val billing: ProtocolBillingDao?,
+    val fulfillment: ProtocolFulfillmentDao?,
     val quote: ProtocolQuotationDao? = null,
     val payment: ProtocolPaymentDao? = null, //todo: is this surely nullable?
     val id: String? = null,

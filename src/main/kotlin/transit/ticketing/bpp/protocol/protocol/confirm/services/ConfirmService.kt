@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import transit.ticketing.bpp.protocol.errors.HttpError
 import transit.ticketing.bpp.protocol.errors.bpp.BppError
-import transit.ticketing.bpp.protocol.errors.database.DatabaseError
-import transit.ticketing.bpp.protocol.errors.registry.RegistryLookupError
 import transit.ticketing.bpp.protocol.message.entities.OnConfirmDao
-import transit.ticketing.bpp.protocol.message.entities.OnOrderStatusDao
 import transit.ticketing.bpp.protocol.message.mappers.GenericResponseMapper
 import transit.ticketing.bpp.protocol.message.services.ResponseStorageService
 import transit.ticketing.bpp.protocol.protocol.discovery.services.SearchService
@@ -40,7 +37,7 @@ class ConfirmService @Autowired constructor(
         context: ProtocolContext,
         message: ConfirmRequestMessageDto
     ): Either<HttpError, ProtocolAckResponse> {
-        log.info("Confirm Service : Got init request with message: {} ", message)
+        log.info("Confirm Service : Got confirm request with message: {} ", message)
         var subscriber: SubscriberDto? = null
         var arrivalDate: String? = null
         var departureDate: String? = null
