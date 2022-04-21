@@ -14,7 +14,7 @@ import java.time.Instant
 class SignRequestInterceptor @Autowired constructor(
   @Value("\${security.self.private_key}") private val b64PrivateKey: String,
   @Value("\${security.self.unique_key_id}") private val uniqueKeyId: String,
-  @Value("\${context.bap_id}") private val subscriberId: String,
+  @Value("\${context.bpp_id}") private val subscriberId: String,
   @Value("\${context.ttl_seconds}") private val ttlInSeconds: String,
 ) : Interceptor {
 

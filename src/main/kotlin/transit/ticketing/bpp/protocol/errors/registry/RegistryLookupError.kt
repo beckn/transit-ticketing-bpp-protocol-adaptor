@@ -1,9 +1,10 @@
 package transit.ticketing.bpp.protocol.errors.registry
 
-import org.beckn.protocol.schemas.ProtocolError
-import org.beckn.protocol.schemas.ResponseMessage
+
 import org.springframework.http.HttpStatus
 import transit.ticketing.bpp.protocol.errors.HttpError
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolError
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ResponseMessage
 
 sealed class RegistryLookupError : HttpError {
   val registryError = ProtocolError("BPP_001", "Registry lookup returned error")

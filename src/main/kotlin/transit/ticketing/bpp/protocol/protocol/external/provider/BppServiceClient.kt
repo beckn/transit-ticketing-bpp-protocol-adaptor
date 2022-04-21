@@ -1,20 +1,28 @@
 package transit.ticketing.bpp.protocol.protocol.external.provider
 
-import org.beckn.protocol.schemas.*
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
+import transit.ticketing.bpp.protocol.protocol.shared.dtos.ConfirmRequestDto
+import transit.ticketing.bpp.protocol.protocol.shared.dtos.OrderStatusRequestDto
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.client.BlockBookResponse
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.client.ClientBlockTicketRequest
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.client.ClientBookTicketRequest
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.client.SearchResponse
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.*
 
-interface BppClient {
-  @POST("search")
-  fun search(@Body request: ProtocolSearchRequest): Call<ProtocolAckResponse>
+interface BppServiceClient {
+//  @GET("protocol/search_by_gps")
+//  fun search(@Query("origin") origin: String,@Query("destination") destination: String ): Call<SearchResponse>
+//
+  @GET("search")
+  fun search(@Query("origin") origin: String,@Query("destination") destination: String ): Call<SearchResponse>
 
-  @POST("init")
-  fun init(@Body request: ProtocolInitRequest): Call<ProtocolAckResponse>
+  @POST("block_ticket")
+  fun blockTicket(@Body request: ClientBlockTicketRequest): Call<BlockBookResponse>
 
-  @POST("confirm")
-  fun confirm(@Body request: ProtocolConfirmRequest): Call<ProtocolAckResponse>
-
-  @POST("cancel")
-  fun cancel(@Body request: ProtocolCancelRequest): Call<ProtocolAckResponse>
+  @POST("book_ticket")
+  fun bookTicket(@Body request: ClientBookTicketRequest): Call<BlockBookResponse>
 }

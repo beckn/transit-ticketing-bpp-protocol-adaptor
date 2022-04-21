@@ -1,6 +1,6 @@
 ---
 server:
-  port: 9003
+  port: 9002
 logging:
   level:
     org:
@@ -12,20 +12,21 @@ spring:
     property-naming-strategy: SNAKE_CASE
     default-property-inclusion: non_null
 context:
-  domain: nic2004:52110
-  city: std:080
+  domain: nic2004:60221
+  city: Kochi
   country: IND
-  bap_id: box.beckn.org
-  bap_uri: http://qa.api.box.beckn.org/bap/v1
+  bpp_id: bap.stayhalo.in
+  bpp_uri: http://localhost:8080/api/v1/secure/
   ttl_seconds: 20
 transit:
   security.enabled: false
 security:
   self:
-    private_key:
-    unique_key_id: key1
+    private_key: b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZWQyNTUxOQAAACDC6beMrEFF7VmZK7EY7QW3LYbe8XTik/pEve02ezDa1wAAAIix3rwCsd68AgAAAAtzc2gtZWQyNTUxOQAAACDC6beMrEFF7VmZK7EY7QW3LYbe8XTik/pEve02ezDa1wAAAEBrrQ8SBkbBxNo6Vj9AWQi61Cs+dfycUG7bBXW+g67c+MLpt4ysQUXtWZkrsRjtBbctht7xdOKT+kS97TZ7MNrXAAAAAAECAwQF
+    unique_key_id: 29
 registry_service:
-  url: https://demo4460370.mockable.io/registry/
+  url: https://pilot-gateway-1.beckn.nsdl.co.in/
+#  https://pilot-gateway-1.beckn.nsdl.co.in/
   retry:
     max_attempts: 3
     initial_interval_in_millis: 1000
@@ -37,7 +38,7 @@ registry_service:
     read_in_seconds: 10
     write_in_seconds: 10
 bpp_registry_service:
-  url: https://demo4460370.mockable.io/bpp_registry/
+  url:  https://pilot-gateway-1.beckn.nsdl.co.in/
 bpp_service:
   retry:
     max_attempts: 3
@@ -47,6 +48,20 @@ bpp_service:
     connection_in_seconds: 10
     read_in_seconds: 10
     write_in_seconds: 10
+client_service:
+  url:  http://localhost:8080/api/v1/secure/
+  retry:
+    max_attempts: 3
+    initial_interval_in_millis: 1000
+    interval_multiplier: 1.0
+  timeouts:
+    connection_in_seconds: 5
+    read_in_seconds: 5
+    write_in_seconds: 5
+database:
+  mongo:
+    url: mongodb://localhost:27017
+    name: transit_protocol_bpp
 management:
   endpoints:
     web:

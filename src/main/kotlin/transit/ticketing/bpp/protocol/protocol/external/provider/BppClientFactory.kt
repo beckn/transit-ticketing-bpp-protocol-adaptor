@@ -12,6 +12,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import transit.ticketing.bpp.protocol.protocol.shared.Util
 import transit.ticketing.bpp.protocol.protocol.shared.factories.RetryFactory
+import transit.ticketing.bpp.protocol.protocol.shared.security.BppClientInterceptor
 import transit.ticketing.bpp.protocol.protocol.shared.security.SignRequestInterceptor
 import java.util.concurrent.TimeUnit
 
@@ -25,14 +26,14 @@ class BppClientFactory @Autowired constructor(
   @Value("\${bpp_service.retry.interval_multiplier}")
   private val intervalMultiplier: Double,
   @Value("\${transit.security.enabled}") val enableSecurity: Boolean,
-  private val interceptor: SignRequestInterceptor,
+  private val interceptor: BppClientInterceptor,
   @Value("\${bpp_service.timeouts.connection_in_seconds}") private val connectionTimeoutInSeconds: Long,
   @Value("\${bpp_service.timeouts.read_in_seconds}") private val readTimeoutInSeconds: Long,
   @Value("\${bpp_service.timeouts.write_in_seconds}") private val writeTimeoutInSeconds: Long,
 
   ) {
   @Cacheable("bppClients")
-  fun getClient(bppUri: String): BppClient {
+  fun getClient(bppUri: String): BppServiceClient {
     val url : String = Util.getBaseUri(bppUri)
     val retrofit = Retrofit.Builder()
       .baseUrl(url)
@@ -40,7 +41,7 @@ class BppClientFactory @Autowired constructor(
       .addConverterFactory(JacksonConverterFactory.create(objectMapper))
       .addCallAdapterFactory(RetryCallAdapter.of(getRetryConfig(bppUri)))
       .build()
-    return retrofit.create(BppClient::class.java)
+    return retrofit.create(BppServiceClient::class.java)
   }
 
   private fun buildHttpClient(): OkHttpClient {
@@ -48,9 +49,7 @@ class BppClientFactory @Autowired constructor(
       .connectTimeout(connectionTimeoutInSeconds, TimeUnit.SECONDS)
       .readTimeout(readTimeoutInSeconds, TimeUnit.SECONDS)
       .writeTimeout(writeTimeoutInSeconds, TimeUnit.SECONDS)
-    if (enableSecurity) {
       httpClientBuilder.addInterceptor(interceptor)
-    }
     return httpClientBuilder.build()
   }
 

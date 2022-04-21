@@ -1,10 +1,10 @@
 package transit.ticketing.bpp.protocol.protocol.external
 
 import arrow.core.Either
-import org.beckn.protocol.schemas.ProtocolAckResponse
-import org.beckn.protocol.schemas.ResponseStatus
 import org.springframework.http.HttpStatus
 import retrofit2.Response
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ProtocolAckResponse
+import transit.ticketing.bpp.protocol.protocol.shared.schemas.protocol.ResponseStatus
 import java.util.function.Predicate
 
 
